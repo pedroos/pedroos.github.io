@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Pedro O S">
+  <meta name="keywords" content="mathematics programming">
+  <meta name="author" content="Pedro O S">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An exponentiation-based float hash - Pedro Sobota</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-33675243-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-33675243-1');
+</script>
+
+<script>
+MathJax = {
+  loader: {load: ['[tex]/tagformat']},
+  // startup: {
+  //   pageReady: () => {
+  //     return MathJax.startup.defaultPageReady();
+  //   }
+  // },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']], 
+    packages: {'[+]': ['tagformat']},
+    // color: {
+    //   padding: '5px'
+    // }
+    //tags: 'ams',
+    // tagformat: {
+    //   // number: (n) => n.toString(),
+    //   tag:    (tag) => 
+    //     //'((' + tag + '))',
+    //     'Formula(' + tag + ')',
+    //   // id:     (id) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+    //   // url:    (id, base) => base + '#' + encodeURIComponent(id),
+    // }
+  }, 
+  chtml: {
+    scale: 1
+  }
+}
+</script>
+
+<!-- <script src='img/MathJax-2.7.7/MathJax.js?config=TeX-MML-AM_CHTML,local/local.js'></script> -->
+<script src='img/MathJax-3.1.2-custom/tex-mml-chtml.js'></script>
+
+<!--<link rel="stylesheet" type="text/css" href="useit.css"/>-->
+<link rel="stylesheet" type="text/css" href="img/style_header.css"/>
+<link rel="stylesheet" type="text/css" href="img/style_body_article.css"/>
+
+<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@300&display=swap" rel="stylesheet"> -->
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="article">
+
+<header>
+
+
+
+<!--%%toc%%-->
+
+</header>
+
+<nav>
+
+<div style="float: left; width: 10px; margin-right: 20px;">
+</div>
+<div style="float: left;">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="toc.html">Mathematics</a></li>
+    <li><a href="labtoc.html">Programming</a></li>
+    <!-- <li><a href="about.html">About</a></li> -->
+  </ul>
+</div>
+
+</nav>
+
+<div class="breadcrumb"></div>
+
+<div class="content">
+<h1>An exponentiation-based float hash</h1>
+<div class="blogtags"><span class="blogtag algo">Algorithms</span></div>
+
+<div class="article_details">
+<p>Pedro O S<br/>March/2019</p><hr/>
+</div>
+
+<p>In this post, I'll describe an algorithm I created to represent real number lists by a single number. (Or, a float hash.)</p>
+
+<p>First, we'll note mean and standard deviation from statistics are reductions commonly used to indicate properties about data expressed as lists of numbers.</p>
+
+<p>The mean statistic, as a property of such list of numbers, is opaque to a modification such that one value is increased in the list while another value is decreased by the same amount. When this modification is performed, the resulting value is not modified. For example, </p>
+
+\[mean [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
+mean [6.5, 3.98, 6.72, 0.89, 3.74, 2.87].\]
+
+<p>Obviously, for the purpose at hand, this would be a serious downside. On this point, the standard deviation is an improvement. That statistic's value is different for the same change:</p>
+
+<p>\[stddev [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = 2.5149, \\
+stddev [6.5, 3.98, 6.72, 0.89, 3.74, 2.87] = 2.21737.\]</p>
+
+<p>The standard deviation, however, is susceptible to a value swap between two numbers: exchanging the position of one value with the position of another one has no effect on the number list's dispersion or its mean value, either.</p>
+
+<p>As an example, considering </p>
+
+\[A=[7.5, 2.98, 6.72, 0.89, 3.74, 2.87],\\
+B=[2.98, 7.5, 6.72, 0.89, 3.74, 2.87]\]
+
+<p>(elements 1-2 swapped),</p>
+
+\[stddev(A) = stddev(B), \\
+mean(A) = mean(B).\]
+
+<p>The common characteristic of those two algorithms over the list of numbers is that they aggregate using mathematically commutative operations: the order of the numbers presented to the operation does not influence its result. We'll examine the possibility of applying a operation which is not commutative to the same problem.<br/>
+
+<h3>Ordering</h3>
+
+<p>One of the first mathematical operations to suggest itself is exponentiation.</p>
+
+\[2 ^ 3 \neq 3 ^ 2, \\
+\left(2 ^ 3\right) ^ 4 \neq 2 ^ \left(3 ^ 4\right).\]
+
+<p>(Note that </p>
+
+\[2^4=4^2,\]
+
+<p>but these are the only pair of natural numbers which commute under exponentiation [<a href="#references">1</a>].)</p>
+
+<p>Drawing this operation of consecutive exponentation with the symbol \(\bigwedge\), and each exponentiation with \(\wedge\), now, </p>
+
+\[\bigwedge [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
+7.5 \wedge 2.98 \wedge 6.72 \wedge 0.89 \wedge 3.34 \wedge 2.87 = \\
+436.491\]
+
+<p>and </p>
+
+\[\bigwedge [2.98, 7.5, 6.72, 0.89, 3.74, 2.87] = \\
+4348.3,\]
+
+<p>such that the ordering requirement is now satisfied.</p>
+
+<h3>Sizing</h3>
+
+<p>As the ordering problem is solved, another immediate problem arises, that the exponentiated numbers grow too fast. We examine the case of \([5,6,4.6]\), which has a magnitude (measured in multiples of 10) of \(10 ^{2654}\).</p>
+
+<p>We'll reduce the magnitude of every number to \(1\), by extracting the decimal exponent and dividing the number by it.</p>
+
+<p>Now, </p>
+
+\[\bigwedge [5, 6, 4006] = \\
+\left(5 \times \frac{1}{10^1}\right) \wedge \left(6 \times \frac{1}{10^1}\right) \wedge \left(4006 \times \frac{1}{10^4}\right) = \\
+0.5 \wedge 0.6 \wedge 0.4006 = \\
+0.568431.\]
+
+<p>Drawing "normalized" numbers as \(\overline{x}\), </p>
+
+\[\overline{5} \wedge \overline{6} \wedge \overline{4006} = 0.568431.\]
+
+<p>The result, now, sits within a controlled range between \(0\) and \(1\).</p>
+
+<h3>Corner cases</h3>
+
+<p>Some corner cases present themselves. The normalization opens up the possibility of magnitude manipulations (since the magnitude is taken out of every number). Thus changes like:</p>
+
+\[\bigwedge [50,.6,46,0.63,.0005,4300,52] = 0.596399\text{,} \]
+
+\[\bigwedge [50,6,4.6,6.3,5,4.3,5.2] = 0.596399\]
+
+<p>yield equal results.</p>
+
+<p>However, those same changes also change the mean value in the list:</p>
+
+\[mean [5,6,4.6,6.3,5,4.3,5.2] = 5.2, \\
+mean [50,6,4.6,6.3,5,4.3,5.2] = 11.6286, \]
+
+<p>We'll prepend the mean to the list; the mean will end up used as the first exponent.</p>
+
+\[\bigwedge [5,6,4.6,6.3,5,4.3,5.2] = \\
+\overline{5} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2} \wedge mean)))))) = \\
+\overline{5} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2} \wedge \overline{5.2})))))) = \\
+0.595317 \\ \neq \\
+\bigwedge [50,6,4.6,6.3,5,4.3,5.2] = \\
+\overline{11.6286} \wedge (\overline{50} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2}))))))) = \\
+0.595047.\]
+
+<p>Now, because the mean is normalized like any other value in the list, a global multiplication of the list by factors of 10 will produce the same results. This case, though, is not fixed, because the manipulation required (multiplying every number by orders of 10) is considered too harmful to the integrity of the original data.</p>
+
+<p>Exponentiation as the chosen operation presents relevant properties.</p>
+
+<p>First, any base of zero in the list will "throw back" the accumulated result to zero; this is not considered a serious issue, but another more serious one is that, in the case the list possesses a leading zero, the final result will be invariably zero, because the zero will be the last exponent to be calculated.</p>
+
+<p>Both problems can be eliminated by substituting zeroes for the normalized mean value, with no detectable side effects. This guarantees, also, no stabilization of value between zeroes (that the resulting value will keep constant as long as there are zeroes in the input).</p>
+
+<p>A special case of this condition is that one of an all-zero list: it yields the \(0^0\) exponentiation, halting the algorithm. This is not possible to avoid without identifying such list element-by-element. In this implementation, this is done beforehand, and zero is returned.</p>
+
+<p>Another possible halting condition is pertaining to negative inputs. Of course, exponentiation by a negative number results in a fraction which, used as exponent for the next number in the list, which could be negative, could yield calculation of an even root over a negative number, producing a complex number.</p>
+
+<p>The trivial solution is taken, of taking absolutes of the inputs, as changes of signal will change the mean as well. The mean is used here again as a help.</p>
+
+<p>Another possible manipulation scenario is that of a swap of two values between themselves  which are multiples of ten between themselves. This combines the swapping and magnitude reduction manipulations. This is the second problem we choose to not fix, by hypothesising a low desireability.</p>
+
+<p>Finally, the operation of consecutive exponentiation is susceptible, at least theoretically, to floating point collisions, because of rounding. The probability of such a collision happening is assumed to be low enough for common use cases.</p>
+
+<h3>Summary</h3>
+
+<p>This number should uniquely represent a list of numbers, except for the following manipulations:</p>
+
+<ul>
+  <li>Changes of all numbers by factors of 10;</li>
+  <li>Swaps of numbers which are multiples of 10 between themselves.</li>
+</ul>
+
+<h3>Visualization</h3>
+
+<p>In figures 1-2, the sucessive calculated value can be seen in random number list. The result obtained is the last point of the lines.</p>
+<p>In figures 3-4, we see the evolution of final results generated over sequences of lists of mostly equidistant and equidistant numbers, respectively, coming from real and synthetic data (incremental entity ids). These are used to try to show possibilities of collisions in the \(y\)-axis, although there are not necessarily collisions in sections of the lines sharing the same \(y\) intervals.<br/>
+
+<div style="overflow: auto; margin-left: auto; margin-right: auto; width: 39em; margin-bottom: 40px; margin-top: 40px; border: 0px solid black">
+  <div style="float: left; margin-right: 2em; border: 0px solid black">
+    <img src="img/an_index_for_number_list_identification/a10.png"/>
+    <div class="figlabel">Fig. 1: successive calculation over a <br/>random 10-sized list</div>
+  </div>
+  <div style="float: left; margin-left: 2em; border: 0px solid black">
+    <img src="img/an_index_for_number_list_identification/a100.png"/>
+    <div class="figlabel">Fig. 2: successive calculation over a <br/>random 100-sized list</div>
+  </div>
+</div>
+<div style="overflow: auto; margin-left: auto; margin-right: auto; width: 39em; border: 0px solid black">
+  <div style="float: left; margin-right: 2em; border: 0px solid black">
+    <img src="img/an_index_for_number_list_identification/b1.png"/>
+    <div class="figlabel">Fig. 3: final results for 1000 lists <br/>of mostly equidistant numbers</div>
+  </div>
+  <div style="float: left; margin-left: 2em; border: 0px solid black">
+    <img src="img/an_index_for_number_list_identification/b2.png"/>
+    <div class="figlabel">Fig. 4: final results for 1000 <br/>lists of equidistant numbers</div>
+  </div>
+</div>
+
+<h3>Benchmarking</h3>
+
+<p>The algorithm execution involves one pass over the entire list, for the result calculation, and two more for the mean and standard deviation calculation. It falls within the category of a linear algorithm.</p>
+
+<p>Computing platform: Mathematica implementation; Intel i5-8250 @ 1.60 GHz, 8,00 GB, Windows 10.</p>
+
+<table class="infotbl">
+    <tr>
+      <th>Random list size</th>
+      <td>1000</td>
+      <td>10000</td>
+      <td>50000</td>
+      <td>250000</td>
+      <td>1000000</td>
+    </tr>
+    <tr>
+      <th>Time</th>
+      <td>0.016 s</td>
+      <td>0.12 s</td>
+      <td>0.574 s</td>
+      <td>2.81 s</td>
+      <td>11.3 s</td>
+    </tr>
+</table>
+
+<h3>Implementations</h3>
+
+<ul>
+  <li><a href="https://gist.github.com/pedroos/76296ae70b69b5f18c46ab7d8512f05e" target="_blank">R</a></li>
+  <li><a href="https://gist.github.com/pedroos/851916d9059b199bc0224960e96dde2c" target="_blank">Mathematica</a></li>
+  <li><a href="https://gist.github.com/pedroos/6dd1a75878c893f48c2c6b2c336641e6" target="_blank">C++/QT</a></li>
+</ul>
+
+<a name="references"><h3>References</h3></a>
+
+<ol>
+  <li><a href="https://math.stackexchange.com/a/3290588/479728" target="_blank">Structure of integer pairs which commute under exponentiation</a></li>
+</ol>
+</div>
+
+<div class="breadcrumb"></div>
+
+<footer>
+Copyright &copy 2018-2021 Pedro O S. All rights reserved.
+</footer>
+
+</body>
+</html>

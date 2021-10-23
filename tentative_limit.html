@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Pedro O S">
+  <meta name="keywords" content="mathematics programming">
+  <meta name="author" content="Pedro O S">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A tentative object-oriented Limit - Pedro Sobota</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-33675243-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-33675243-1');
+</script>
+
+<script>
+MathJax = {
+  loader: {load: ['[tex]/tagformat']},
+  // startup: {
+  //   pageReady: () => {
+  //     return MathJax.startup.defaultPageReady();
+  //   }
+  // },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']], 
+    packages: {'[+]': ['tagformat']},
+    // color: {
+    //   padding: '5px'
+    // }
+    //tags: 'ams',
+    // tagformat: {
+    //   // number: (n) => n.toString(),
+    //   tag:    (tag) => 
+    //     //'((' + tag + '))',
+    //     'Formula(' + tag + ')',
+    //   // id:     (id) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+    //   // url:    (id, base) => base + '#' + encodeURIComponent(id),
+    // }
+  }, 
+  chtml: {
+    scale: 1
+  }
+}
+</script>
+
+<!-- <script src='img/MathJax-2.7.7/MathJax.js?config=TeX-MML-AM_CHTML,local/local.js'></script> -->
+<script src='img/MathJax-3.1.2-custom/tex-mml-chtml.js'></script>
+
+<!--<link rel="stylesheet" type="text/css" href="useit.css"/>-->
+<link rel="stylesheet" type="text/css" href="img/style_header.css"/>
+<link rel="stylesheet" type="text/css" href="img/style_body_article.css"/>
+
+<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@300&display=swap" rel="stylesheet"> -->
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="article">
+
+<header>
+
+
+
+<!--%%toc%%-->
+
+</header>
+
+<nav>
+
+<div style="float: left; width: 10px; margin-right: 20px;">
+</div>
+<div style="float: left;">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="toc.html">Mathematics</a></li>
+    <li><a href="labtoc.html">Programming</a></li>
+    <!-- <li><a href="about.html">About</a></li> -->
+  </ul>
+</div>
+
+</nav>
+
+<div class="breadcrumb"></div>
+
+<div class="content">
+<div class="bigger_article">
+
+<h1>A tentative object-oriented Limit</h1>
+
+<div class="blogtags"><span class="blogtag algo">Mathematics</span></div>
+
+<div class="article_details">
+<p>Pedro O S<br/>January/2021</p><hr/>
+</div>
+
+<p>This is a tentative explanation for a Limit in a more computational way.</p>
+
+<p>We have talked about how the $\delta, \varepsilon$ definition of continuity <a class="ref" href="#ref">[1]</a> expresses an infinitesimal concept in a disguised, unreadable, and anti-didactic way. This permeates the traditional pedagogy of analysis by consequence, as evidenced by cases where proofs are enunciated in error or in imprecise ways because the relationship between the parts of the statement are not understood by the presenter. But this is not the point here.</p>
+
+<p>The infinitesimal in the $\delta, \varepsilon$ definition of limit can be found in:</p>
+
+<p style="text-align: center">$\forall \varepsilon \gt 0$ together with $x \lt \varepsilon$: we're looking for $x$ to be greater than $0$ and smaller than any real number greater than $0$; in other words, an infinitely small quantity.</p>
+
+<p>Here is what a limit is:</p>
+
+$$
+{\color{fuchsia}x' \gt x \Rightarrow} \, {\color{orange}0 \lt} \, {\color{red}\mid f(x) - L \mid} \, {\color{orange}\lt \varepsilon, \, \forall \varepsilon \in \mathbb{R}} {\color{fuchsia}\text{, and } x \text{ exists}}\label{1}\tag{1}
+$$
+
+<ul>
+  <li>${\color{fuchsia}x' \gt x\text{, }x\text{ exists}}$: for all elements in the domain of the function larger than some element $x$, which exists</li>
+  <li>${\color{orange}0 \lt a \lt \varepsilon, \forall \varepsilon \in \mathbb{R}}$: $a$ is an infinitesimal; in the case above, the distance between the function value at the taken point and the proposed limit (explained below) is infinitesimal</li>
+  <li>${\color{red}\mid f(x) - L \mid}$: the distance between the function value at element $x$ and the proposed limit $L$</li>
+</ul>
+
+<!-- <p>In a sequence (a natural-number domain function), $x$ will be the value of the function for an index or position into the sequence, so $x \in \mathbb{N}$; in a real-number domain function, $x$ will be a real number.</p> -->
+
+<p>So:</p>
+
+<blockquote>$L$ is the limit of a function if there exists some element of its domain such that for all elements larger than it (following it), the difference between the function value there and the proposed limit is a number smaller than any real number, but larger than zero. (That is, an infinitesimal.)</blockquote>
+
+<p>Or, in other words:</p>
+
+<blockquote>$L$ is the limit of a function if "past a certain point" in the function, the function is always <i>infinitely close</i> to $L$.</blockquote>
+
+<p>It is tempting, when trying to picture the above assertion, to think of it as describing the general evolution of the function along its domain; or from some arbitrary point of it ($x'$) onwards. This is incorrect; the above behavior is only true <i>infinitely close</i> to the "end" of the function's domain.</p>
+
+<p>The "end", in case, is where the limit "happens": where the value of the function stabilizes into the limit.</p>
+
+<p>This "place", interestingly, is at <i>infinity</i>: this means it can't be captured in a graph. Only the behavior "leading up to there" appears in the graph: the corresponding <b>asymptote</b>. But, again, the asymptote is <b>not</b> part of the above behavior for the existence of a limit. The asymptote is, with luck, an <i>indicator</i> of the presence of a limit; but in an arbitrarily defined function, an asymptote-looking curve could be followed by a non-limit. And, likewise, an irregular function "up to a point" could "end abruptly" in a limit, in a way that the limit's asymptote is small relative to the irregularity such that it can't be easily perceived in a graph.</p>
+
+<p>The function <i>stabilization</i>, as we'll see, denotes, computationally, the <i>termination</i> of the enumeration of the function, albeit after an infinite amount of time; nevertheless, it <i>is</i> termination, because the function value is a constant after some point, and constants require no computation.</p>
+
+<div style="width: 500px; margin-left: auto; margin-right: auto; margin-top: 60px; margin-bottom: 60px;"><img src="img/tentative_limit_1.svg" width="500"/></div>
+
+<p>This also means enumeration of a function with a limit can't be non-terminating <i>anywhere</i>, and so this establishes the synonyms $\text{convergent}=\text{limited}=\text{eventually terminating}$ and $\text{divergent}=\text{non-terminating}$. What about $\text{terminating}$ (in a finite amount of time)? As we'll see, this corresponds to finite functions, that is, functions defined over finite domains that produce no non-finite elements out of those domain elements. Numerically, all functions over finite $\mathbb{N}$ subsets would classify as such.</p>
+
+<h2>Object aspects</h2>
+
+<p>Let's go over the descriptive elements used in the definition $\eqref{1}$.</p>
+
+<ol>
+  <li>The relation of being smaller or larger than another element; that is, the <i>order</i> ($\lt$) relation</li>
+  <li>The property of being an infinitesimal, that is, infinitely small</li>
+  <li>The value of the distance between two elements</li>
+</ol>
+
+<p>Of these, a few comments can be made.</p>
+
+<h3>Order</h3>
+
+<p>This is one of the problems in the traditional conception. The order relation is used to hold under the same class <i>irrational</i> and <i>rational</i> numbers (but not accepting <i>infinitesimal</i> ones, which is weird). To have this relation hold is why an <i>infinitesimal</i> class of numbers is not accepted, because those would not be directly comparable with the real numbers (further explanation of the problem of comparability will be given in a future article). We'll mention here the difference of behavior of $\lt$ between rationals and irrationals.</p>
+
+<p>The relation of $\lt$ in the rationals is <i>verifiable</i>. Two segments with rational lengths can be measured to verify which of the two is smaller: measurement terminates. Contrast this to comparing a rational with an irrational, or two irrational-length segments: measurement of the irrational segment <i>doesn't terminate</i>, so $\lt$ can't be computationally verified when one of the compared numbers is not rational.</p>
+
+<p>We can stipulate that if at some digit the irrationals or irrational and rational diverge, than the one number with the greatest digit is the greatest number. But that's an <i>axiom</i> in the system, introduced to decide in a finite time. With rationals, the order can be decided in finite time by simply measuring the numbers, and the axiom is not needed. This is a logical difference between the systems.</p>
+
+<p>For our system, this means in the presence of an inconsistency, we're free to rethink: we can see <i>order</i> as generally any transitive <i>difference</i>, for instance (where transitivity is our familiar property of $a \, R \, b \land b \, R \, c \Rightarrow a \, R \, c$). Whereas 'order' is generally taken as to be a property exclusive to numbers, 'transitive difference' is appliable to a more general class of objects, while acceptably reducing to 'order' for the particular case of numbers (smaller or larger numbers are transitively different numbers).</p>
+
+<p>As such, we'll do away with <i>order</i> and implement, generally, <i>transitive difference</i>.</p>
+
+<h3>Infinitesimal</h3>
+
+<p>In our conception, Infinitesimal is a <i>class</i> of numbers.</p>
+
+<p>This conception is close to the Leibnizian conception of infinitesimals, or to non-standard analysis or other systems (<a class="ref" href="#ref">[1]</a>, Addendum (Dec. 20)</a>). In these systems, infinitesimals are smaller than any Real number; but are not only one between all them; there are infinite infinitesimals of different "sizes", and they can be <i>compared</i>, and put in <i>ratios</i> (just not together with Real numbers). Thus, Infinitesimals form a <b>type</b> which is <i>not</i> a subtype of <code>Number</code>.</p>
+
+<p>In a way, such multiple infinitesimals can be analogized to the multiplicity of infinities, which is very real in Mathematics. They can be taken as <i>reciprocals</i> of (countable) infinities; the exact behavior of such a system will be elaborated in a system called a <b>Fractional Space</b>. We can examine the generation of the multiplicity of (countable) infinities to try and, by a reverse algorithm, generate a corresponding multiplicity of infinitesimalities. With any luck, they can be both integrated into a single well-behaved Ratio system which encompasses as well all Rational numbers.</p>
+
+<p>In this scheme, Irrational numbers are taken as Not Numbers in principle, their Order relation to Rationals being abolished and they not being dealt with upfront; or being dealt with as a result of a more general framework of non-terminating algorithms.</p>
+
+<h3>Distance</h3>
+
+<p>Distance is the <i>quantification</i> or <i>measurement</i> of the Order relation; so, in the transitive difference abstraction, Distance means likewise the quantification or measurement of such transitive difference relation between two objects. In this way, Distance can be thought of as being as complex as the objects being related.</p>
+
+<p>Distance is typically an object of the same type as the compared objects (when the compared objects are of the same type) (distance between numbers is a number, distance between Colors is a Color, etc.). But exceptions can occur and, in this case, the type may be said to be a parameterized type <code>Distance&lt;T&gt;</code>. Comparisons of objects between different types (i.e. "morphisms") are not considered at this point.</p>
+
+<p>An exception to the above rule is when a distance is so small that it is "the smallest distance" before zero. (Or, in difference terms, being the "smallest difference" before equality.) This measurement transitions from being a Distance to being an Infinitesimal. All Infinitesimal Numbers are smaller than all Numbers and are larger than Zero. All Infinitesimal differences are less different that any Non-Infinitesimal differences and are less different than Equality. As such, <code>Distance</code> (as representing a difference) is a <b>Sum type</b> composed of either the type being measured  or the type <code>Infinitesimal</code>.
+
+<p>For example, distances between Colors are, in pseudocode, of type <code>Color | Infinitesimal</code>. Distances between Lists are of type <code>List | Infinitesimal</code>. For types $T$ with more complex differences, their Distances may be <code>Distance&lt;T&gt; | Infinitesimal</code>.</p>
+  
+<blockquote class="special">A sum type is an algebraic type; that is, a compound type over some algebraic operation (in this case, sum).</blockquote>
+
+<h2>Termination</h2>
+
+<p>Let's re-mention that <b>convergence</b> is synonym with <b>having a limit</b>; and <b>non-convergence</b>, with <b>not having a limit</b>.</p>
+
+<p>In a computational way, an algorithm or function is said to either <b>terminate</b> or <b>not terminate</b>. Computationally, a numeric function which is <b>divergent</b>, for example, a function with an asymptote to the infinite, has a <b>non-terminating</b> enumeration; it always produces more values along its domain.</p>
+
+<p>As another example, the enumeration of a numeric function which produces a finite set (that is, a function $\mathbb{B}\rightarrow\mathbb{N}$ with a finite domain) can be proved to terminate (there is no operation on a number which produces a non-finite set). Such finite functions are not convergent, nor divergent.</p>
+
+<p>A function that <b>converges</b> is a third class of functions with respect to termination: its enumeration terminates, but only after infinite iterations.</p>
+
+<h4>Infinity out of finiteness?</h4>
+
+<p>For a function's enumeration to not terminate in a finite amount of time, the function must either operate over an infinite domain (that's trivial) and <i>not</i> have a limit; or transform elements from a finite domain into infinite sets.</p>
+
+<p>Such a function will then be subject to the criteria of whether it <i>converges</i>: in the positive case its enumeration <i>eventually terminates</i>, and in the negative case, its enumeration is <i>really</i> is non-terminating.</p>
+
+<h4>Function enumeration</h4>
+
+<p>We'll consider function enumeration as a recursive process, or function $E(f)$, which takes a function as argument, aggregates the function's value for the "current" element of its domain, and calls itself with the function and "next" element in the domain as specified by the domain's order relation.</p>
+
+<p>The enumeration produces a List. A list $l$'s element, denoted by its position $n$ is $l[n]$.</p>
+
+<p>As such, enumeration of divergent functions is non-terminating; enumeration of finite-domain functions is finitely terminating; and enumeration of convergent functions is eventually terminating.</p>
+
+<p>The key here is that the enumeration for a convergent function <i>is</i> terminating, which is used as a definition as there being a limit on a function with an infinite domain.</p>
+
+<h4>Does the function include the limit?</h4>
+
+<p>No. If the function included the limit in its image (as its final element), then we could say the limit of an arbitrary convergent function is its last element; or test for the value of the limit of an arbitrary convergent function by checking its last element.</p>
+
+<p>This, however, (and following Mathematics), would prevent characterizing the convergent function as being composed of <code>Infinitesimal</code> differences part a certain point (because the last element, the limit, would have difference zero, not <code>Infinitesimal</code>, to itself).</p>
+
+<p>This boils down to not there being a passage from an <code>Infinitesimal</code> to any number. As such, we can't know what the element after the last <code>Infinitesimal</code> is; the actual value of the limit must be found another way.</p>
+
+<p>We can still test for the presence of a limit by checking for termination after infinitely many steps, though.</p>
+
+<h2>Final definition</h2>
+
+<p>With the conceptualizations in Object aspects and Termination characteristics made, it is possible to re-build <i>Limit</i> as:</p>
+
+<blockquote>
+  ${\color{green}L}({\color{red}D})$ is the limit of a function $f:A \rightarrow B$, respective to a certain transitive difference ${\color{red}D}(a,b)$, if after ${\color{fuchsia}E}(f)[{\color{brown}x'}]$, the difference ${\color{red}D}({\color{fuchsia}E}[{\color{brown}x}],{\color{green}L})$ is of type $\verb|Infinitesimal|$.
+</blockquote>
+
+<p>We can "retroactively" test for a limit in terms of the infinite-domain function's enumeration. This does not depend on the concepts of the type of the elements, or the difference between elements.</p>
+
+<blockquote>
+  A function $f:{\color{red}A} \rightarrow B$, with infinite domain ${\color{red}A}$, has a limit if the enumeration $E(f)$ terminates.
+</blockquote>
+
+<a name="ref"><h2>References</h2></a>
+
+<ul>
+  <li><a href="proving_discontinuity_epsilon.html">Continuity and syntactic infinitesimal, Pedro O S</a></li>
+</ul>
+
+</div>
+</div>
+
+<div class="breadcrumb"></div>
+
+<footer>
+Copyright &copy 2018-2021 Pedro O S. All rights reserved.
+</footer>
+
+</body>
+</html>

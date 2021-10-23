@@ -1,0 +1,15 @@
+pre.cscode {
+    margin:0em;
+    overflow:auto;
+    background-color:#ffffff;
+    padding: 0;
+    line-height: 120%;
+    color:#000000;
+    font-family: 'm_1mregular';
+    font-size:11pt;
+    font-weight: normal;
+    font-style: normal;
+}
+.cscode .key {color:#000088;}
+.cscode .com {color:#777777; font-size: 9pt;}
+.cscode .str {color:#a31515;}

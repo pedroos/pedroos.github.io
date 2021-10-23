@@ -1,0 +1,51 @@
+body.lab h1 {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 26px;
+}
+body.lab h2 {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 20px;
+    text-align: center;
+}
+body.lab h3 {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 18px;
+}
+body.lab h4 {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    text-decoration: underline;
+}
+body.lab h5 {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 13px;
+}
+body.lab ul.toc {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 16px;
+    line-height: 42px;
+}
+code {
+    font-weight: bold;
+}
+code.noweight {
+    font-weight: normal;
+    font-size: 14px;
+}
+pre {
+    font-size: 14px;
+}
+.framed ul.simple li.lab {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 18px;
+}
+.tablecaption {    
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+}
+table.tbl1 {
+    line-height: 1.2;
+    font-family: 'm_1mregular';
+    font-weight: normal;
+    font-style: normal;
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Pedro O S">
+  <meta name="keywords" content="mathematics programming">
+  <meta name="author" content="Pedro O S">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exponential float hash as a string hash - Pedro Sobota</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-33675243-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-33675243-1');
+</script>
+
+<script>
+MathJax = {
+  loader: {load: ['[tex]/tagformat']},
+  // startup: {
+  //   pageReady: () => {
+  //     return MathJax.startup.defaultPageReady();
+  //   }
+  // },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']], 
+    packages: {'[+]': ['tagformat']},
+    // color: {
+    //   padding: '5px'
+    // }
+    //tags: 'ams',
+    // tagformat: {
+    //   // number: (n) => n.toString(),
+    //   tag:    (tag) => 
+    //     //'((' + tag + '))',
+    //     'Formula(' + tag + ')',
+    //   // id:     (id) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+    //   // url:    (id, base) => base + '#' + encodeURIComponent(id),
+    // }
+  }, 
+  chtml: {
+    scale: 1
+  }
+}
+</script>
+
+<!-- <script src='img/MathJax-2.7.7/MathJax.js?config=TeX-MML-AM_CHTML,local/local.js'></script> -->
+<script src='img/MathJax-3.1.2-custom/tex-mml-chtml.js'></script>
+
+<!--<link rel="stylesheet" type="text/css" href="useit.css"/>-->
+<link rel="stylesheet" type="text/css" href="img/style_header.css"/>
+<link rel="stylesheet" type="text/css" href="img/style_body_article.css"/>
+
+<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@300&display=swap" rel="stylesheet"> -->
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="article">
+
+<header>
+
+
+
+<!--%%toc%%-->
+
+</header>
+
+<nav>
+
+<div style="float: left; width: 10px; margin-right: 20px;">
+</div>
+<div style="float: left;">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="toc.html">Mathematics</a></li>
+    <li><a href="labtoc.html">Programming</a></li>
+    <!-- <li><a href="about.html">About</a></li> -->
+  </ul>
+</div>
+
+</nav>
+
+<div class="breadcrumb"></div>
+
+<div class="content">
+<link rel="stylesheet" type="text/css" href="img/csharp.css"/>
+
+<h1>Exponential float hash as a string hash</h1>
+<div class="blogtags"><span class="blogtag algo">Algorithms</span></div>
+
+<div class="article_details">
+<p>Pedro O S<br/>August/2020</p><hr/>
+</div>
+
+<p>In <a href="an_exponentiation_based_float_hash.html">an exponentiation-based float hash</a>, I described an algorithm to compute hashes of lists of floats, with the property that the intermediate and final values were limited to a range from 0 to 1.</p>
+
+<p>Upon searching for a string hash algorithm, and coming across this Polynomial Rolling Hash (PRH) algorithm <a class="ref" href="#ref">[1]</a>, I decided to test my algorithm, recreationally, as a string hash, since strings are represented underneath by bytes.</p>
+
+<p>As I had recently ported the algorithm to C#, I decided to use this language for tests.</p>
+
+<!-- <iframe width="100%" height="475" src="https://dotnetfiddle.net/Widget/mIck7I" frameborder="0"></iframe> -->
+
+<p>Tests were run in Release mode under Visual Studio against PRH and three other algorithms cited in this Stack Overflow question <a href="#references">[2]</a>: XX, FNV-1a and Murmur3. The first three were easy to instantiate with the NuGet packages: <a href="https://www.nuget.org/packages/xxHashSharp" target="_blank">xxHashSharp</a>, and <a href="https://www.nuget.org/packages/HashDepot" target="_blank">HashDepot</a>. The PRH was implemented directly by copying and adapting the C++ code.</p>
+
+<p>Three kinds of tests were implemented for each hashing algorithm:</p>
+
+<ol>
+    <li>Correctness: various strings, equal and unequal, to each other were tested for equal and unequal results;</li>
+    <li>Words test: from <a href="https://github.com/dwyl/english-words" target="_blank">dwyl's english-words</a>, serial hashing of more than 466,000 English words to measure time;</li>
+    <li>Collisions test: similar to the words test, reusing the dictionary, without measuring time, and building a list of results to check for repetitions.</li>
+</ol>
+
+<p>Source code for the tests is available <a href="https://github.com/pedroos/NoperHash/blob/master/CSharp/NoperHashTests/NoperHashTests.cs" target="_blank">here</a>.</p>
+
+<p>Here are the results for the Words and Collisions tests (all algorithms passed the Correctness test). The tests were run from Visual Studio with Release builds.</p>
+
+<!-- <h5 style="text-align: center">Words test</h5> -->
+
+<!-- <pre>
+Fnv1 words:
+Elapsed ms: 8
+
+Murmur words:
+Elapsed ms: 11
+
+PRH words:
+Elapsed ms: 158
+
+XX words:
+Elapsed ms: 12
+
+Noper words:
+<b>Elapsed ms: 1317</b>
+</pre> -->
+
+<div style="display: flex; width: 500px; margin-left: auto; margin-right: auto; margin-top: 30px; margin-bottom: 30px;">
+    <div style="float: left;"><img src="img/exponentiation_based_float_hash_2_1.svg" width="400"/></div>
+    <div style="float: left; margin-top: 80px; margin-left: 10px;"><img src="img/exponentiation_based_float_hash_2_legend.png"/></div>
+</div>
+
+<p>The exponential algorithm (Noper) takes two orders of magnitude more time to calculate the final value than XX, Fnv-1a or Murmur3, and 1/2 more than PRH. The performance bottleneck is identified as being in following function calls:</p>
+
+<p>
+<code>Math.Pow(a, b)</code> - 33% of cpu time<br/>
+<code>Math.Log10(n)</code> - 19% of cpu time<br/>
+</p>
+
+<p>Despite minor optimizations, this relative level of performance has been found to be innate to the algorithm. The time to compute is known to be linear with the quantity of numbers in the input list.</p>
+
+<!-- <h5 style="text-align: center">Collisions test</h5> -->
+
+<!-- <pre>
+//466,000 word list
+
+Fnv1 collisions:
+Collision 'interventralia' with ''elephantlike'' result 2807761639
+...
+Collision 'zinke' with ''altarage'' result 3831552182
+Total collisions: 23
+
+Murmur collisions:
+Collision 'demobilise' with ''amyloleucite'' result 3064097899
+...
+Collision 'well-laced' with ''keffel'' result 3942653590
+Total collisions: 25
+
+XX collisions:
+Collision 'estocada' with ''bruits'' result 257976272
+...
+Collision 'welldoers' with ''taikih'' result 2121289022
+Total collisions: 16
+
+PRH collisions:
+Collision 'ANU' with ''A/V'' result -11160
+...
+Collision 'zugtierlaster' with ''anthropogony'' result 509305992
+Total collisions: 271
+
+Noper collisions:
+<b>Total collisions: 0</b>
+</pre> -->
+
+<div style="display: flex; width: 500px; margin-left: auto; margin-right: auto; margin-top: 30px; margin-bottom: 30px;">
+        <div style="float: left;"><img src="img/exponentiation_based_float_hash_2_2.svg" width="400"/></div>
+        <div style="float: left; margin-top: 80px; margin-left: 10px;"><img src="img/exponentiation_based_float_hash_2_legend.png"/></div>
+    </div>
+
+<p>The exponential algorithm shows no collisions in this test. It could theoretically exhibit collisions from floating-point rounding, but the probability is currently unknown. The probability might also not be uniform. The hash has been tested with values in extremal ranges:</p>
+
+<ul>
+    <li>High magnitude:<br/><code>[1429041290,1429041350,1429041410,1429041470,1429041530,1429041590,1429041650,1429041710,
+        1429041770,1429041830]</code></li>
+    <li>Low magnitude:<br/><code>[0.000000101467,0.0,0.0833333,0.633333,1.9,1.5,2.76667,5.2,3.7,0.8]</code></li>
+</ul>
+
+<p>The other algorithms show a very small number of collisions, with PRH a tad up.</p>
+
+<p>One difference between the algorithms is that Noper produces floating point results in the range 0-1, where the other algorithms produce integer values. All tests for proximity of result values in the test suite are done with an epsilon of <code>1*10^-9</code>, checking for the six first decimal digits (for example, <code>0.379659</code>). More decimal digits and lower epsilon values can be used.</p>
+
+<h3>Code</h3>
+
+<p>The algorithm and tests are implemented in a runnable <a href="https://dotnetfiddle.net/mIck7I" target="_blank">dotnetfiddle</a>.</p>
+
+<p>The complete code is hosted in a <a href="http://www.github.com/pedroos/NoperHash" target="_blank">GitHub</a> repository.</p>
+
+<a name="ref"><h3>References</h3></a>
+
+<ol>
+    <li><a href="https://cp-algorithms.com/string/string-hashing.html" target="_blank">Polynomial rolling hash function, CP-Algorithms</a></li>
+    <li><a href="https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed" target="_blank">Which hashing algorithm is best for uniqueness and speed?, Stack Overflow</a></li>
+    <li><a href="http://www.github.com/pedroos/NoperHash" target="_blank">NoperHash at GitHub</a></li>
+</ol>
+
+
+</div>
+
+<div class="breadcrumb"></div>
+
+<footer>
+Copyright &copy 2018-2021 Pedro O S. All rights reserved.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Pedro O S">
+  <meta name="keywords" content="mathematics programming">
+  <meta name="author" content="Pedro O S">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layout and symbolic expressions - Pedro Sobota</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-33675243-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-33675243-1');
+</script>
+
+<script>
+MathJax = {
+  loader: {load: ['[tex]/tagformat']},
+  // startup: {
+  //   pageReady: () => {
+  //     return MathJax.startup.defaultPageReady();
+  //   }
+  // },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']], 
+    packages: {'[+]': ['tagformat']},
+    // color: {
+    //   padding: '5px'
+    // }
+    //tags: 'ams',
+    // tagformat: {
+    //   // number: (n) => n.toString(),
+    //   tag:    (tag) => 
+    //     //'((' + tag + '))',
+    //     'Formula(' + tag + ')',
+    //   // id:     (id) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+    //   // url:    (id, base) => base + '#' + encodeURIComponent(id),
+    // }
+  }, 
+  chtml: {
+    scale: 1
+  }
+}
+</script>
+
+<!-- <script src='img/MathJax-2.7.7/MathJax.js?config=TeX-MML-AM_CHTML,local/local.js'></script> -->
+<script src='img/MathJax-3.1.2-custom/tex-mml-chtml.js'></script>
+
+<!--<link rel="stylesheet" type="text/css" href="useit.css"/>-->
+<link rel="stylesheet" type="text/css" href="img/style_header.css"/>
+<link rel="stylesheet" type="text/css" href="img/style_body_article.css"/>
+
+<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@300&display=swap" rel="stylesheet"> -->
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet"><link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Source+Code+Pro:wght@500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="img/lab/style_body_article_lab.css"/>
+
+</head>
+
+<body class="lab">
+
+<header>
+
+
+
+<!--%%toc%%-->
+
+</header>
+
+<nav>
+
+<div style="float: left; width: 10px; margin-right: 20px;">
+</div>
+<div style="float: left;">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="toc.html">Mathematics</a></li>
+    <li><a href="labtoc.html">Programming</a></li>
+    <!-- <li><a href="about.html">About</a></li> -->
+  </ul>
+</div>
+
+</nav>
+
+<div class="breadcrumb"></div>
+
+<div class="content">
+<script src='img/microlight.js' async></script>
+<script src='img/sortable.min.js' async></script>
+
+<script>
+  document.body.onload = () => {
+    Sortable.create(document.getElementById('sortable1'), 
+      {
+        sort: true, 
+        dragClass: 'dragging', 
+        dragoverBubble: true, 
+        // Called when dragging element changes position
+        onChange: (e) => {
+          // console.log([e.oldIndex, e.newIndex])
+          sortChange()
+        }
+      })
+    sortChange()
+  }
+
+  sortChange = () => {
+    // const setTempl = document.querySelector('#templ_sortit_set')
+    const sortable = document.querySelector('#sortable1')
+    
+    // const sortitItems = document.querySelector('#templ_sortit').content.cloneNode(true)
+
+    var html = '<div class="items">'
+    for (const sortableItem of sortable.children) {
+      html += `<div class="set" style="background: ${sortableItem.style.background}">${sortableItem.innerHTML}`
+    }
+    html += `<div class="setelement" sstyle="background: lightgrey">${document.querySelector('#empty').innerHTML}</div>`
+    for (const sortableItem of sortable.children) {
+      html += '</div>'
+    }
+    html += '</div>'
+
+    document.querySelector('#sortit').innerHTML = html
+  }
+</script>
+
+<style type="text/css">
+  .cssset1 .set {
+    display: block;
+    border: 1px solid black;
+  }
+  .cssset1 .setelement {
+    display: block;
+    border: 1px solid green;
+  }
+  .cssset2 .set {
+    display: block;
+    border: 0;
+    padding: 10px;
+  }
+  .cssset2 .setelement {
+    display: block;
+    border: 2px solid green;
+    padding: 10px;
+    margin: 5px;
+  }
+  .cssset3 .list div {
+    display: inline;
+    border: 1px solid blue;
+    padding: 3px;
+  }
+  .cssset4 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+    display: flex;
+    align-items: center;
+  }
+  .cssset4 > .item {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .cssset4 .set {
+    display: block;
+    border: 2px solid green;
+    padding: 10px;
+  }
+  .cssset4 .setelement {
+    display: block;
+    /* border: 2px solid green; */
+    padding: 10px;
+    margin: 5px;
+  }
+  .cssset4 .list > div {
+    display: inline;
+    border: 1px solid blue;
+    padding: 3px;
+  }
+  .cssset4.numbertwo {
+    display: block;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cssset4.numbertwo > .item {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 480px;
+  }
+  #sortable1 {
+    display: flex;
+  }
+  .sortable_label {
+    text-align: center;
+  }
+  /* #sortable1 li {
+    border: 1px solid grey;
+    margin-left: 10px;
+    margin-right: 10px;
+  } */
+  /* #sortable1 .dragging {
+    background: orange;
+  } */
+</style>
+
+<!--
+<template id="artTitleTemplate">Layout and symbolic expressions</template>
+<template id="artImageTemplate">http://psobo.com/blog/img/cssset_preview.png</template>
+-->
+
+<h1>Layout and symbolic expressions</h1>
+
+<p>In this article, CSS (Cascading Style Sheets) is used as an example of implementation to suggest correspondences between Mathematical structures and Layout.</p>
+
+<h3>Set hierarchies</h3>
+
+<pre class="microlight">
+  &lt;div class="set"&gt;
+    &lt;div class="set"&gt;
+      &lt;div class="setelement"&gt;
+        &lt;!-- Set 1 --&gt;
+        Set 1: empty element (&empty;)
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="set"&gt;
+      &lt;!-- Set 2 --&gt;
+    &lt;/div&gt;
+    &lt;div class="set"&gt;
+      &lt;!-- Set 3 --&gt;
+      &lt;div class="setelement"&gt;
+        Set 2: set element      
+      &lt;/div&gt;
+      &lt;div class="setelement"&gt;
+        Set 2: set element
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+</pre>
+
+<p>In the hierarchy above, Set 2 has no element itself, nor any of its children have one. Or either, there are no elements in its path from the root. In its graphical representation, Set 2 doesn't appear.</p>
+
+<p>Set 1 has the empty element; it is the empty set. It, in turn, appears in the graphical representation.</p>
+
+<div class="cssset1">
+  <div class="set">
+    <div class="set">
+      <div class="setelement">
+        Set 1: empty element (&empty;)
+      </div>
+    </div>
+    <div class="set">
+    </div>
+    <div class="set">
+      <div class="setelement">
+        Set 3: set element
+      </div>
+      <div class="setelement">
+        Set 3: set element
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>Another way to demonstrate this.</p>
+
+<div class="cssset2">
+  <div class="set">
+    <div class="set">
+      <div class="setelement">
+        Set 1: empty element (&empty;)
+      </div>
+    </div>
+    <div class="set">
+    </div>
+    <div class="set">
+      <div class="setelement">
+        Set 3: set element
+      </div>
+      <div class="setelement">
+        Set 3: set element
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>In the conception of Sets belonging to a Set Universe, even a single Set is a Set hierarchy. This is because a Set Hierarchy is formed from elements of type <code>Set | SetElement</code> and a Set must have at least one children of type SetElement, so, two elements of same type <code>(Set | SetElement) > (Set | SetElement)</code> in a parent-children relationship form a hierarchy.</p>
+
+<h3>Lists</h3>
+
+<pre class="microlight">
+  &lt;div class="list"&gt;
+    &lt;div&gt;
+      Item 1
+    &lt;/div&gt;
+    &lt;div&gt;
+      
+    &lt;/div&gt;
+    &lt;div&gt;
+      Item 3
+    &lt;/div&gt;
+    &lt;div&gt;
+      Item 4
+    &lt;/div&gt;
+  &lt;/div&gt;
+</pre>
+
+<div class="cssset3">
+  <div class="list">
+    <div>
+      Item 1
+    </div>
+    <div>
+      
+    </div>
+    <div>
+      Item 3
+    </div>
+    <div>
+      Item 4
+    </div>
+  </div>
+</div>
+
+<p>In the CSS implementation of Layout, the property of an element being a Block is in itself (<code>display: block</code>). So a Block, even empty, exists.</p>
+
+<p>The property of an element being an Inline, on the other hand, in CSS, is placed in its children, which are <code>display: inline</code>; the element itself's <code>display</code> is irrelevant. So an element without child <code>inline</code> items isn't a List at all.</p>
+
+<p>This property could be analogized to Mathematical Sets containing possible Empty elements, but Lists containing no Empty elements (except for possible Empty Sets).</p>
+
+<p>In the list above, Item 2 is not an Empty element; it is marked <code>inline</code>; it is just without "text" or any visible characteristic. As such, it has a border, whereas Set 2 in the first example without even an Empty element has no border and doesn't show at all.</p>
+
+<p>Also, note the list doesn't form a hierarchy; a List here is of type <code>List</code> but none of its children are required to be <code>List</code>s (even though this is allowed).</p>
+
+<h3>Symbolic expressions</h3>
+
+<p>In <i>Recursive Functions</i>, McCarthy (1960) <a class="ref" href="#ref">[1]</a> describes Symbolic expressions (or S-expressions or sexps), in the context of computer programming, as an <b>ordered pair</b> whose elements are either <b>atoms</b> or other Sexps. It is of note that in Set theory, Ordered Pairs are acceptably defined as Sets; see the Kuratowsky definition at <a class="ref" href="#ref">[2]</a>. This implementation is also illustrated in object-oriented form in <i>Limits</i> <a class="ref" href="#ref">[3]</a>. As Sets, Ordered Pairs also either include other Ordered Pairs, or set elements. Symbolic expression atoms are defined in <i>Recursive Functions</i> as an "infinite set of distinguishable atomic symbols", each of which strings of Latin letters which could be perfectly understood as trivial Set elements (not much used in Mathematics).</p>
+
+<p>The $($, $)$, $\cdot$ characters used in Symbolic expressions correspond to the delimiters used in mathematical Pairs so</p>
+
+$$\operatorname{(ABC\cdot DEF)}\text{ (sexp)} = \operatorname{(A,B)}\text{ (pair).}$$
+
+<p>Sexps, as nested pairs, are just mathematical nested pairs, or Sets.</p>
+
+$$\operatorname{(ABC\cdot (DEF\cdot GHI))}\text{ (sexp)} = \operatorname{(A,(B,C))}\text{ (pairs).}$$
+
+<p>Implicit in Sexps are <i>terminating atoms</i>, and they, in the form of <i>empty sets</i>, are implicit in Set hierarchies, too:</p>
+
+$$\operatorname{(ABC\cdot (DEF\cdot (GHI\cdot {\color{darkred}NIL})))}\text{ (sexp)} = \operatorname{(A,(B,(C,{\color{darkred}\emptyset})))}\text{ (pairs).}$$
+
+<p>Thus, S-expressions are not under this definition any different from ordinary Mathematical Ordered Pairs.</p>
+
+<p>One of the insights involved in Symbolic expressions in <i>Recursive functions</i> is their ability to model <i>lists</i>:</p>
+
+$$\operatorname{(ABC\cdot (DEF\cdot (GHI\cdot {\color{darkred}NIL})))}\text{ (sexp)} = \operatorname{(ABC, DEF, GHI)}\text{ (sexp).}$$
+
+<p>(Note the terminating atom $\operatorname{{\color{darkred}NIL}}$ or ${\color{darkred}\emptyset}$ is absent when converting a nested pair hierarchy to a list, agreeing in principle with our characterization above of Sets as hierarchical and Lists as non-hierarchical objects.)</p>
+
+<p>This one-to-one Nested Pair &harr; List correspondence works because, obviously, each Pair has, at maximum, <i>one</i> surplus element to the other element; in the case this other element is another Pair, in a Pair hierarchy, the non-pair element fully characterizes each Pair, being a single element in the List; and the obligatory non-Pair second element only occurs once in the hierarchy, so it needs only be noted <i>once</i> in the List, in the non-empty case, at the final position of the List, and in the empty case, it just being implicit.</p>
+
+<blockquote>
+  Symbolic expressions can be seen as a common "class" or type between Pair hierarchies and Lists.
+</blockquote>
+
+<p>Using the Layout to Mathematics correspondence, the sexp Nested Pair &harr; List correspondence can be transported to Layout, simulating a Pair Block hierarchy &harr; Inlines correspondence.</p>
+
+<div class="cssset4">
+  <div class="item">
+    <div class="items">
+      <div class="set">
+        $\operatorname{ABC}$
+        <div class="set">
+          $\operatorname{DEF}$
+          <div class="set">
+            $\operatorname{GHI}$
+            <div class="setelement">
+              <span id="empty">${\color{darkred}\emptyset}$</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="item">
+    $\huge{=}$
+  </div>
+  <div class="item list">
+    <div>
+      $\operatorname{ABC}$
+    </div>
+    <div>
+      $\operatorname{DEF}$
+    </div>
+    <div>
+      $\operatorname{GHI}$
+    </div>
+  </div>
+</div>
+
+<p>We can automatically draw objects in both representations. Try it:</p>
+
+<div class="cssset4 numbertwo">
+  <div id="sortit" class="item">
+  </div>
+  <div class="item">
+    <div class="sortable_label">&larr; drag and drop &rarr;</div>
+    <div id="sortable1" class="list">
+      <div style="background: lightyellow">$\operatorname{SYMBOL}$</div>
+      <div style="background: lightsalmon">$\operatorname{ABA}$</div>
+      <div style="background: lightblue">$\operatorname{APPLE PIE NUMBER 3}$</div>
+      <div style="background: lightcyan">$\operatorname{C}$</div>
+      <div style="background: lightgreen">$\operatorname{ATOM}$</div>
+    </div>
+  </div>
+</div>
+
+<!-- <h3>Block languages</h3>
+
+<p>Traditional programming languages are <i>block-form</i> languages, meaning they are structured in blocks corresponding to syntactical elements. This follows the tradition of <i>computer languages</i> deriving from the concept of <i>human language</i>, (more) mathematically defined by Chomsky in the 20th century as composed of Linguistic elements forming Grammars. A computational machine (Automata) can be formally defined which automatically sections a string defined in a specific Grammar into its constituent syntactical elements.</p>
+
+<p>This is the tradition S-expressions fork from, or provide an alternative to; as mapping languages and allowing programs to be manipulated through, interchangeably, List or Set algorithms instead of Block algorithms.</p> -->
+
+<a name="ref"><h3>References</h3></a>
+<ol>
+    <li><a href="https://archive.org/details/recursive-functions-symbolic-expressions/" target="_blank">Recursive Functions of Symbolic Expressions and Their Computation by Machine, Part I. John McCarthy, MIT. April, 1960. Archive.org.</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Ordered_pair" target="_blank">Ordered Pair, Wikipedia. Accessed Jan/2021</a></li>
+    <li><a href="https://github.com/pedroos/limits/blob/master/LimitsCsharp/Limits/ElemAsSet.cs" target="_blank">ElemAsSet, Limits, Pedro O S, GitHub</a></li>
+</ol>
+</div>
+
+<div class="breadcrumb"></div>
+
+<footer>
+Copyright &copy 2018-2021 Pedro O S. All rights reserved.
+</footer>
+
+</body>
+</html>
