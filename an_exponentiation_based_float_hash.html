@@ -97,7 +97,7 @@ MathJax = {
 <div class="blogtags"><span class="blogtag algo">Algorithms</span></div>
 
 <div class="article_details">
-<p>Pedro O S<br/>March/2019</p><hr/>
+<p>Pedro Sobota<br/>March/2019</p><hr/>
 </div>
 
 <p>In this post, I'll describe an algorithm I created to represent real number lists by a single number. (Or, a float hash.)</p>
@@ -106,25 +106,33 @@ MathJax = {
 
 <p>The mean statistic, as a property of such list of numbers, is opaque to a modification such that one value is increased in the list while another value is decreased by the same amount. When this modification is performed, the resulting value is not modified. For example, </p>
 
-\[mean [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
-mean [6.5, 3.98, 6.72, 0.89, 3.74, 2.87].\]
+$$\displaylines{
+mean [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
+mean [6.5, 3.98, 6.72, 0.89, 3.74, 2.87].
+}$$
 
 <p>Obviously, for the purpose at hand, this would be a serious downside. On this point, the standard deviation is an improvement. That statistic's value is different for the same change:</p>
 
-<p>\[stddev [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = 2.5149, \\
-stddev [6.5, 3.98, 6.72, 0.89, 3.74, 2.87] = 2.21737.\]</p>
+$$\displaylines{
+stddev [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = 2.5149, \\
+stddev [6.5, 3.98, 6.72, 0.89, 3.74, 2.87] = 2.21737.
+}$$
 
 <p>The standard deviation, however, is susceptible to a value swap between two numbers: exchanging the position of one value with the position of another one has no effect on the number list's dispersion or its mean value, either.</p>
 
 <p>As an example, considering </p>
 
-\[A=[7.5, 2.98, 6.72, 0.89, 3.74, 2.87],\\
-B=[2.98, 7.5, 6.72, 0.89, 3.74, 2.87]\]
+$$\displaylines{
+A=[7.5, 2.98, 6.72, 0.89, 3.74, 2.87],\\
+B=[2.98, 7.5, 6.72, 0.89, 3.74, 2.87]
+}$$
 
 <p>(elements 1-2 swapped),</p>
 
-\[stddev(A) = stddev(B), \\
-mean(A) = mean(B).\]
+$$\displaylines{
+stddev(A) = stddev(B), \\
+mean(A) = mean(B).
+}$$
 
 <p>The common characteristic of those two algorithms over the list of numbers is that they aggregate using mathematically commutative operations: the order of the numbers presented to the operation does not influence its result. We'll examine the possibility of applying a operation which is not commutative to the same problem.<br/>
 
@@ -132,25 +140,33 @@ mean(A) = mean(B).\]
 
 <p>One of the first mathematical operations to suggest itself is exponentiation.</p>
 
-\[2 ^ 3 \neq 3 ^ 2, \\
-\left(2 ^ 3\right) ^ 4 \neq 2 ^ \left(3 ^ 4\right).\]
+$$\displaylines{
+2 ^ 3 \neq 3 ^ 2, \\
+\left(2 ^ 3\right) ^ 4 \neq 2 ^ \left(3 ^ 4\right).
+}$$
 
 <p>(Note that </p>
 
-\[2^4=4^2,\]
+$$\displaylines{
+2^4=4^2,
+}$$
 
 <p>but these are the only pair of natural numbers which commute under exponentiation [<a href="#references">1</a>].)</p>
 
 <p>Drawing this operation of consecutive exponentation with the symbol \(\bigwedge\), and each exponentiation with \(\wedge\), now, </p>
 
-\[\bigwedge [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
+$$\displaylines{
+\bigwedge [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
 7.5 \wedge 2.98 \wedge 6.72 \wedge 0.89 \wedge 3.34 \wedge 2.87 = \\
-436.491\]
+436.491
+}$$
 
 <p>and </p>
 
-\[\bigwedge [2.98, 7.5, 6.72, 0.89, 3.74, 2.87] = \\
-4348.3,\]
+$$\displaylines{
+\bigwedge [2.98, 7.5, 6.72, 0.89, 3.74, 2.87] = \\
+4348.3,
+}$$
 
 <p>such that the ordering requirement is now satisfied.</p>
 
@@ -162,14 +178,18 @@ mean(A) = mean(B).\]
 
 <p>Now, </p>
 
-\[\bigwedge [5, 6, 4006] = \\
+$$\displaylines{
+\bigwedge [5, 6, 4006] = \\
 \left(5 \times \frac{1}{10^1}\right) \wedge \left(6 \times \frac{1}{10^1}\right) \wedge \left(4006 \times \frac{1}{10^4}\right) = \\
 0.5 \wedge 0.6 \wedge 0.4006 = \\
-0.568431.\]
+0.568431.
+}$$
 
 <p>Drawing "normalized" numbers as \(\overline{x}\), </p>
 
-\[\overline{5} \wedge \overline{6} \wedge \overline{4006} = 0.568431.\]
+$$\displaylines{
+\overline{5} \wedge \overline{6} \wedge \overline{4006} = 0.568431.
+}$$
 
 <p>The result, now, sits within a controlled range between \(0\) and \(1\).</p>
 
@@ -177,26 +197,30 @@ mean(A) = mean(B).\]
 
 <p>Some corner cases present themselves. The normalization opens up the possibility of magnitude manipulations (since the magnitude is taken out of every number). Thus changes like:</p>
 
-\[\bigwedge [50,.6,46,0.63,.0005,4300,52] = 0.596399\text{,} \]
+$$\displaylines{\bigwedge [50,.6,46,0.63,.0005,4300,52] = 0.596399\text{,}}
 
-\[\bigwedge [50,6,4.6,6.3,5,4.3,5.2] = 0.596399\]
+$$\displaylines{\bigwedge [50,6,4.6,6.3,5,4.3,5.2] = 0.596399}
 
 <p>yield equal results.</p>
 
 <p>However, those same changes also change the mean value in the list:</p>
 
-\[mean [5,6,4.6,6.3,5,4.3,5.2] = 5.2, \\
-mean [50,6,4.6,6.3,5,4.3,5.2] = 11.6286, \]
+$$\displaylines{
+mean [5,6,4.6,6.3,5,4.3,5.2] = 5.2, \\
+mean [50,6,4.6,6.3,5,4.3,5.2] = 11.6286, 
+}$$
 
 <p>We'll prepend the mean to the list; the mean will end up used as the first exponent.</p>
 
-\[\bigwedge [5,6,4.6,6.3,5,4.3,5.2] = \\
+$$\displaylines{
+\bigwedge [5,6,4.6,6.3,5,4.3,5.2] = \\
 \overline{5} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2} \wedge mean)))))) = \\
 \overline{5} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2} \wedge \overline{5.2})))))) = \\
 0.595317 \\ \neq \\
 \bigwedge [50,6,4.6,6.3,5,4.3,5.2] = \\
 \overline{11.6286} \wedge (\overline{50} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2}))))))) = \\
-0.595047.\]
+0.595047.
+}$$
 
 <p>Now, because the mean is normalized like any other value in the list, a global multiplication of the list by factors of 10 will produce the same results. This case, though, is not fixed, because the manipulation required (multiplying every number by orders of 10) is considered too harmful to the integrity of the original data.</p>
 
@@ -279,9 +303,7 @@ mean [50,6,4.6,6.3,5,4.3,5.2] = 11.6286, \]
 <h3>Implementations</h3>
 
 <ul>
-  <li><a href="https://gist.github.com/pedroos/76296ae70b69b5f18c46ab7d8512f05e" target="_blank">R</a></li>
-  <li><a href="https://gist.github.com/pedroos/851916d9059b199bc0224960e96dde2c" target="_blank">Mathematica</a></li>
-  <li><a href="https://gist.github.com/pedroos/6dd1a75878c893f48c2c6b2c336641e6" target="_blank">C++/QT</a></li>
+  <li><a href="https://github.com/pedroos/NoperHash" target="_blank">C# (GitHub)</a></li>
 </ul>
 
 <a name="references"><h3>References</h3></a>
@@ -294,7 +316,7 @@ mean [50,6,4.6,6.3,5,4.3,5.2] = 11.6286, \]
 <div class="breadcrumb"></div>
 
 <footer>
-Copyright &copy 2018-2021 Pedro O S. All rights reserved.
+Copyright &copy 2018-2023 Pedro Sobota. All rights reserved.
 </footer>
 
 </body>
