@@ -4,11 +4,15 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Pedro O S">
-  <meta name="keywords" content="mathematics programming">
+  <meta name="description" content="Pedro O S's Math Blog">
+  <meta name="keywords" content="mathematics software development programming">
   <meta name="author" content="Pedro O S">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Imperative to functional: simple sort 1 in C# - Pedro Sobota</title>
+  <title>Imperative to functional: simple sort 1 in C# - Pedro Sobota</title>
+  <meta property='og:title' content='Imperative to functional: simple sort 1 in C# - Pedro Sobota'/>
+  <meta property='og:image' content=''/>
+  <!-- <meta property='og:description' content='%%art.description%%'/>
+  <meta property='og:url' content='%%art.url%%'/> -->
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-33675243-1"></script>
@@ -84,12 +88,7 @@ MathJax = {
     <li><a href="index.html">Home</a></li>
     <li><a href="toc.html">Mathematics</a></li>
     <li><a href="labtoc.html">Programming</a></li>
-    <li><a href="bgdtoc.html">Big Data</a></li>
-    <!-- <li><a href="bustoc.html">Business</a></li> -->
-    <!-- <li><a href="gdpr.html">Laws</a></li> -->
-    <!-- <li><a href="cv.html">CV</a></li>
-    <li><a href="contact.html">Contact</a></li> -->
-    <!-- <li><a href="about.html">About</a></li> -->
+    <li><a href="about.html">About</a></li>
   </ul>
 </div>
 
@@ -104,7 +103,7 @@ MathJax = {
 <div class="blogtags"><span class="blogtag algo">Programming</span></div>
 
 <div class="article_details">
-<p>Pedro Sobota<br/>July/2020</p><hr/>
+<p>Pedro O S<br/>July/2020</p><hr/>
 </div>
 
 <p>In this article, we will progressively turn an imperative sorting algorithm into semi-functional style. We'll consider a simple sorter which walks through an unsorted collection, reordering elements one-by-one. The sorter works by preserving position of elements larger than its priors, finding first larger values in the case of smaller values, and opening spaces for those.</p>
@@ -115,7 +114,7 @@ MathJax = {
 
 <p>Thanks to <a href="https://www.pvladov.com/p/syntax-highlighter.html" target="_blank">Pavel Vladov's syntax highlighter</a> for nicely coloring code. Also, thanks for <a href="http://draw.io" target="_blank">draw.io</a> for their amazing software.</p>
 
-<p>To illustrate an array generation example, let's implement a collection copying routine in imperative style, and an equivalent using functional concepts. With each step, unit tests will be present which are runnable from the article's <a href="https://dotnetfiddle.net/NerJCH" target="_blank">solution</a> on dotnetfiddle.</p>
+<p>To illustrate an array generation example, let's implement a collection copying routine in imperative style, and an equivalent using functional concepts. With each step, unit tests will be present which are runnable from the article's <a href="https://dotnetfiddle.net/zctPuJ" target="_blank">solution</a> on dotnetfiddle.</p>
 
 <p class="uplegend">L. 1. Imperative vs. functional</p>
 <pre class="cscode">
@@ -579,7 +578,7 @@ For example, an imperative <code>while</code> condition <code>i < x</code> would
 </pre>
 -->
 
-<p>The <code>for</code> loop body, as the core of the algorithm, alters an array arbitrarily and then attributes a new element to the array. The imperative characteristic here is a function of the outer <code>for</code> loop, which operates over elements of the original collection, returning new elements (a so-called projection). Objects altered by a function which survive the scope of the function (and are not its return value) are called <i>side effects</i> of the function. By generating collections in between iterating over elements an returning new elements, the collection generation step is characterized as imperative.</b></p>
+<p>The <code>for</code> loop body, as the core of the algorithm, alters an array arbitrarily and then attributes a new element to the array. The imperative characteristic here is a function of the outer <code>for</code> loop, which operates over elements of the original collection, returning new elements (a so-called projection). <b>A function returns one kind of object each time it executes, and any other object altered by the function which survives the scope of the function is a <i>side effect</i>.</b> By generating collections in between iterating over elements an returning new elements, the collection generation step is characterized as imperative.</b></p>
 
 <h3>Call stack</h3>
 
@@ -637,13 +636,13 @@ sort orig array:
 
 <h3>Article solution</h3>
 
-<p>The article's complete code listing can be executed at the <a href="https://dotnetfiddle.net/NerJCH" target="_blank">dotnetfiddle solution</a>.</p>
+<p>The article's complete code listing can be executed at the <a href="https://dotnetfiddle.net/zctPuJ" target="_blank">dotnetfiddle solution</a>.</p>
 </div>
 
 <div class="breadcrumb"></div>
 
 <footer>
-Copyright &copy 2018-2023 Pedro Sobota. All rights reserved.
+Copyright &copy 2018-2020 Pedro O S. All rights reserved.
 </footer>
 
 </body>
