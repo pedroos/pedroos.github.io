@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Pedro Sobota Programming Blog">
+  <meta name="keywords" content="pedro sobota programming blog">
+  <meta name="author" content="Pedro Sobota">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperative to functional: simple sort 1 in C# - Pedro Sobota</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-33675243-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-33675243-1');
+</script>
+
+<script>
+MathJax = {
+  loader: {load: ['[tex]/tagformat']},
+  // startup: {
+  //   pageReady: () => {
+  //     return MathJax.startup.defaultPageReady();
+  //   }
+  // },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']], 
+    packages: {'[+]': ['tagformat']},
+    // color: {
+    //   padding: '5px'
+    // }
+    //tags: 'ams',
+    // tagformat: {
+    //   // number: (n) => n.toString(),
+    //   tag:    (tag) => 
+    //     //'((' + tag + '))',
+    //     'Formula(' + tag + ')',
+    //   // id:     (id) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+    //   // url:    (id, base) => base + '#' + encodeURIComponent(id),
+    // }
+  }, 
+  chtml: {
+    scale: 1
+  }
+}
+</script>
+
+<!-- <script src='img/MathJax-2.7.7/MathJax.js?config=TeX-MML-AM_CHTML,local/local.js'></script> -->
+<script src='img/MathJax-3.1.2-custom/tex-mml-chtml.js'></script>
+
+<!--<link rel="stylesheet" type="text/css" href="useit.css"/>-->
+<link rel="stylesheet" type="text/css" href="img/style_header.css"/>
+<link rel="stylesheet" type="text/css" href="img/style_body_article.css"/>
+
+<!-- <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@300&display=swap" rel="stylesheet"> -->
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="article">
+
+<!--<header>-->
+
+<!--
+
+-->
+
+<!--%%toc%%-->
+
+<!--</header>-->
+
+<nav>
+
+<!--<div style="float: left; width: 10px; margin-right: 20px;">
+</div>-->
+<!--<div style="float: left;">-->
+  <!--<ul>-->
+    <!--<li><a href="index.html">Home</a></li>-->
+    <!--<li><a href="toc.html">Mathematics</a></li>-->
+    <!--<li><a href="labtoc.html">Programming</a></li>-->
+    <!--<li><a href="bgdtoc.html">Big Data</a></li>-->
+    <!-- <li><a href="bustoc.html">Business</a></li> -->
+    <!-- <li><a href="gdpr.html">Laws</a></li> -->
+    <!-- <li><a href="cv.html">CV</a></li>-->
+    <!--<li><a href="contact.html">Contact</a></li> -->
+    <!-- <li><a href="about.html">About</a></li> -->
+  <!--</ul>-->
+<!--</div>-->
+
+</nav>
+
+<!--
+<div class="breadcrumb"></div>
+-->
+
+<div class="content">
+<link rel="stylesheet" type="text/css" href="img/csharp.css"/>
+
+<h1>Imperative to functional: simple sort 1 in C#</h1>
+
+<div class="blogtags"><span class="blogtag algo">Programming</span><span class="blogtag algo">Functional</span><span class="blogtag algo">C#</span></div>
+
+<div class="article_details">
+<p>Pedro Sobota<br/>July/2020</p><hr/>
+</div>
+
+<p>In this article, we will progressively turn an imperative sorting algorithm into semi-functional style. We'll consider a simple sorter which walks through an unsorted collection, reordering elements one-by-one. The sorter works by preserving position of elements larger than its priors, finding first larger values in the case of smaller values, and opening spaces for those.</p>
+
+<p>We'll walk through the collection element-by-element and insert elements into a new collection. In functional style, the array creation and element assignment operations are <i>implied</i>; we need not take care of those steps. In imperative programming, these operations are performed explicitly as part of the algorithm.</p>
+
+<p>We'll be using <i>C#</i>; where <i>C#</i> might get inadequate, we might try implementing in other languages.</p>
+
+<p>Thanks to <a href="https://www.pvladov.com/p/syntax-highlighter.html" target="_blank">Pavel Vladov's syntax highlighter</a> for nicely coloring code. Also, thanks for <a href="http://draw.io" target="_blank">draw.io</a> for their amazing software.</p>
+
+<p>To illustrate an array generation example, let's implement a collection copying routine in imperative style, and an equivalent using functional concepts. With each step, unit tests will be present which are runnable from the article's <a href="https://dotnetfiddle.net/NerJCH" target="_blank">solution</a> on dotnetfiddle.</p>
+
+<p class="uplegend">L. 1. Imperative vs. functional</p>
+<pre class="cscode">
+        <span class="com">// Imperative</span>
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; CopyI&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll)
+        {
+            <span class="key">var</span> newColl = <span class="key">new</span> T[coll.Count()];
+            <span class="key">for</span> (<span class="key">int</span> i = 0; i &lt; coll.Count(); ++i)
+                newColl[i] = coll.ElementAt(i);
+            <span class="key">return</span> newColl;
+        }
+
+        <span class="com">// Functional</span>
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; CopyF&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll) =&gt;
+            coll.Select(c =&gt; c);
+
+        <span class="com">// Tests</span>
+        <span class="key">var</span> col = <span class="key">new</span> <span class="key">int</span>[] { 2, 3, 1, 4 };
+        <span class="key">var</span> copied = col.CopyF().ToArray();
+        Assert.IsTrue(copied.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 2, 3, 1, 4 }));
+</pre>
+
+<p>Imperative code is easier to tune for performance because object construction is explicit and  it's possible, for example, to modify objects in place instead of copying them (mutability). While in the functional approach performance is also controllable, the general level of abstraction is higher.</p>
+
+<p>In the algorithm, with each iteration the collection will be modified: smaller elements will be allocated earlier, and larger elements, later in the new collection. This will be done by copying elements, while also opening spaces for elements which are found to be smaller than the last copied element. This way, the largest-to-date elements always occupy the last position in the collection.</p>
+
+<p>We'll implement, first, a displacing function. This means "padding" an array (to the right) with default values or, in the case of <code>int</code>s, zeroes.</p>
+
+<p class="uplegend">L. 2. Displace by one position</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; DisplaceOneFrom&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll, <span class="key">int</span> idx) =&gt;
+            coll.Select((e, i) =&gt;
+                i &lt; idx ? e :
+                (i == idx ? <span class="key">default</span> : 
+                coll.ElementAt(i - 1)));
+        
+        <span class="com">// Tests</span>
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1 };
+        <span class="key">var</span> coll2 = coll.DisplaceOneFrom(1);
+        Console.WriteLine(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 3, 0, 2, 4 }));
+</pre>
+
+<p>Steps:<br/>
+<ul>
+    <li>Prior to the displacing position, preserve each element's position</li>
+    <li>At the displacing position, produce a zero or default value</li>
+    <li>After the displacing position, yield the previous element</li>
+</ul></p>
+
+<p>We want to generalize a little bit and make it work for any displacement size, not only one.</p>
+
+<p class="uplegend">L. 3. Displace by multiple positions</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> <span class="key">bool</span> ContainedIn(<span class="key">this</span> <span class="key">int</span> indexVal, Range range) =&gt;
+            range.Start.Value &lt;= indexVal && range.End.Value &gt;= indexVal;
+
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; DisplaceFrom&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll, <span class="key">int</span> idx, <span class="key">int</span> count) =&gt;
+            coll.Select((e, i) =&gt;
+                i &lt; idx ? e :
+                (i.ContainedIn(idx..(idx+count-1)) ? <span class="key">default</span> :
+                coll.ElementAt(i - count)));
+
+        <span class="com">// Tests</span>
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1, 7, 8, 3 };
+        <span class="key">var</span> coll2 = coll.DisplaceFrom(2, 3).ToArray();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 3, 2, 0, 0, 0, 4, 1 }));
+</pre>
+
+<p>Steps:<br/>
+    <ul>
+        <li>Compute a displacing range from the displacing initial position with the informed number of positions</li>
+        <li>Prior to the range, yield elements at their positions</li>
+        <li>During the range, produce defaults</li>
+        <li>After the range, yield elements subtracting the range size from the current position</li>
+    </ul>
+</p>
+
+<h3>Making room</h3>
+
+<p>This function does not, however, 'make room' for the new element, cutting off moved elements from the collection after the original collection's size is reached. <b>This is not necessary for the sort algorithm we're about to implement. To follow the sort algorithm implementation along, skip to <a href="#iterativedisplacement">Iterative displacement</a></b>.</p>
+
+<p>The function does not "make room" because the function produces a single output value and we're iterating over single elements, so the result is a collection with the same number of elements as the input collection. To implement a "moving" displacement, we could produce <i>tuples with elements</i>, instead of just </i>elements</i>, when we're just straight copying elements; and elements, together with the necessary spaces, at the displacing region. This will need to be packed into a tuple as well, to maintain type compatibility for the concatenation. Afterwards, the tuples are concatenated, producing a new collection of elements.</p>
+
+<div class="centerimg" style="width: 750px;"><img src="img/functional_algorithms_1.svg" width="650"/></div>
+
+<p>In order to flatten or concatenate, we'll use the awesome <a href="https://github.com/morelinq/MoreLINQ" target="_blank">MoreLINQ</a> library.</p>
+
+<p class="uplegend">L. 4. Tuple projection concatenation</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; MakeRoomFromTuples&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll, <span class="key">int</span> idx, <span class="key">int</span> count) =&gt;
+            coll.Select((e, i) =&gt;
+                i &lt; idx ? <span class="key">new</span> T[] { e } :
+                (i == idx ? Enumerable.Range(1, count).Select(c =&gt; <span class="key">default</span>(T)).Concat(<span class="key">new</span> T[] { e }) :
+                <span class="key">new</span> T[] { coll.ElementAt(i) }))
+            .Flatten().Cast&lt;T&gt;();
+                
+        <span class="com">// Tests</span>
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1 };
+        <span class="key">var</span> coll2 = coll.MakeRoomFromTuples(2, 2).ToArray();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 3, 2, 0, 0, 4, 1 }));
+
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1, 8, 9, 11 };
+        <span class="key">var</span> coll2 = coll.MakeRoomFromTuples(3, 4).ToArray();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 0, 0, 0, 0, 1, 8, 9, 11 }));
+</pre>
+
+<p><i>C#</i> doesn't allow one-element tuples. Thus, arrays must be used. This shouldn't by itself be a problem if, beyond input array sizes <i>not</i> being very large, which is assumed in this article, intermediate arrays would be freed not a long time after function execution. According to <a href="https://stackoverflow.com/questions/3160688/garbage-collection-in-a-linq-query" target="_blank">garbage collection in a linq query (Stack Overflow)</a>, the intermediates should be eligible to be freed when the function ends, or sooner, following usual garbage collector rules for the language.</p>
+
+<p>In the 'space' range, since we're using up an element position to also generate spaces, the spaces and element share the same tuple.</p>
+
+<p>In this example, it is necessary to generate arrays for single elements. Because this is necessary only for concatenation with the 'spaces + element' array, it seems a little wasteful, so we'll try dividing the input array into partitions, head, middle, and tail, and concatenating those. Actually, we'll take a look at and reuse the <code>DisplaceFrom()</code> function, which already generates the two first of the parts just mentioned, and just add to that the trailing, after-the-space elements.</p>
+
+<div class="centerimg" style="width: 650px;"><img src="img/functional_algorithms_2.svg" width="600"/></div>
+
+<p class="uplegend">L. 5. Head + tail concatenation</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; MakeRoomFromAppend&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll, <span class="key">int</span> idx, <span class="key">int</span> count) =&gt;
+            DisplaceFrom(coll, idx, count).ToArray()
+            .Concat(coll.Skip(idx));
+
+        <span class="com">// Tests</span>
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1 };
+        <span class="key">var</span> coll2 = coll.MakeRoomFromAppend(2, 2).ToArray();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 3, 2, 0, 0, 4, 1 }));
+
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1, 8, 9, 11 };
+        <span class="key">var</span> coll2 = coll.MakeRoomFromAppend(3, 4).ToArray();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 0, 0, 0, 0, 1, 8, 9, 11 }));
+</pre>
+
+<p><code>DisplaceFrom()</code> doesn't generate extra arrays; a single extra concatenation is performed with the Append method; thus, it has inherently better performance characteristics.</p>
+
+<a name="iterativedisplacement"><h3>Iterative displacement</h3></a>
+
+<p>The listing below shows imperative code to sort item-by-item using the <code>DisplaceOneFrom</code> function already defined.</p>
+
+<p class="uplegend">L. 6. Iterative displacement</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; Sort&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll)
+            where T : IComparable&lt;T&gt;
+        {
+            <span class="key">var</span> newColl = <span class="key">new</span> T[coll.Count()];
+            <span class="key">for</span> (<span class="key">int</span> i = 0; i &lt; coll.Count(); ++i)
+            {
+                <span class="key">int</span> iCursor = i;
+                <span class="key">while</span> (iCursor &gt; 0 && (newColl.ElementAt(iCursor - 1).CompareTo(coll.ElementAt(i)) &gt; 0)) 
+                    --iCursor;
+                <span class="key">if</span> (iCursor &lt; i) 
+                    newColl = DisplaceOneFrom(newColl, iCursor).ToArray();
+                newColl[iCursor] = coll.ElementAt(i);
+            }
+            <span class="key">return</span> newColl;
+        }
+
+        <span class="com">// Tests</span>
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1 };
+        <span class="key">var</span> coll2 = coll.Sort();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 1, 2, 3, 4 }));
+        
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1, 11, 8, 9, 11, 27,5 };
+        <span class="key">var</span> coll2 = coll.Sort();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 1, 2, 3, 4, 5, 8, 9, 11, 11, 27 }));
+</pre>
+
+<p>Steps:<br/>
+<ul>
+    <li>Copy elements over</li>
+    <li>When a smaller-than-the-last-appended element would be copied, "backtrack" until a larger element is found (<code>iCursor</code>), then:
+        <ul>
+            <li>Use <code>DisplaceOneFrom()</code> to open one space prior</li>
+            <li>Copy the new element</li>
+        </ul>
+    </li>
+    <li>"Snap" back to the current position</li>
+</ul></p>
+
+<p>This imperative implementation creates a single result array, performing the changes in the original array. Let's "functionalize" it step-by-step. First, let's experiment with the <code>while</code> loop as a recursive function.</p>
+
+<h3>Recursion while</h3>
+
+<p>Let's begin with a minimal recursive while-function, evolving it to a more full-featured function gradually. We begin by observing a few properties of any function:</p>
+
+<ol>
+    <li>A function can call itself, of course</li>
+    <li>A function can call itself only conditionally, thus stopping a recursive chain arbitrarily</li>
+    <li>A function which receives arguments can pass to itself different arguments than it has received</li>
+</ol>
+
+<p>If the property (3) would not be valid, a pure function calling itself could never have what to use to decide whether to call itself again (outside of some probabilistic value generated in-place). Since a pure function contains nothing from outside besides its arguments, with constant arguments it would either never call itself back and return immediately, or permanently call itself back, and never return. Luckily, the function can compute and pass modified values to itself in a recursive call.</p>
+
+<p class="uplegend">L. 7. Minimal recursive while</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> <span class="key">int</span> While1(<span class="key">int</span> e) =&gt;
+            e != 3 ? 
+                While1(e + 1) :
+                e;
+
+        <span class="com">// Tests</span>
+        <span class="key">int</span> a = Algorithms.While1(0);
+        Assert.AreEqual(3, a);
+</pre>
+
+<p>Steps:<br/>
+<ul>
+    <li>The function calls itself back passing an incremented value based on its current argument</li>
+    <li>Once the value is incremented enough, the function calls itself for the last time</li>
+</ul>
+
+<p>Following <i>C#</i> nomenclature, <i>action</i> will refer to a function which does not return a value, and <i>function</i> to a function which returns a value.</p>
+
+<a name="lastconditionwhichwillrun"><blockquote class="special">The ending step outlined above has different behavior than the imperative <code>while</code> loop: in the imperative loop, the <i>action</i> executes <i>until</i> the stopping condition is reached; in the functional loop, the action executes <i>one last time</i> as the condition is reached.<!-- The loop end evaluation is performed <i>prior</i> to the action execution, vs. <i>after</i> the action execution in the imperative version. This has origins in the fact that, in the functional paradigm, a <i>stack of functions</i>, instead of a <i>tree of instructions</i>, is executed. There are, in this execution structure, no leaf nodes to execute and resume execution from a distinct branch. We'll see more about the stack later, but for now, t--> This affects the <i>ending condition</i>, which is expressed as <i>the last step which will run</i>.<br/>
+For example, an imperative <code>while</code> condition <code>i < x</code> would become <code>i < x - 1</code>.</blockquote></a>
+
+<p>The argument passed in the initial function call is the initial value.</p>
+
+<p>Before evolving this While function, let's apply it. Our objective is to simulate a for loop by performing arbitrary actions a fixed number of times. We can do this by passing an annex function to the <code>While</code> function, with the code to execute. </p>
+
+<p>Even though the code in a loop in imperative code is usually an <i>action</i>, that is, it doesn't return a value, in our use it will be a <i>function</i> which will return the <code>While</code> argument value for each iteration, which it will also receive from <code>While</code>. This offers us a place to execute the function in a pure-functional context, by <i>using the function where the argument value would be returned</i>.</p>
+
+<p class="uplegend">L. 7. Recursive while with action</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> <span class="key">int</span> While1Action1(<span class="key">int</span> e, <span class="key">int</span> stop, Func&lt;<span class="key">int</span>, <span class="key">int</span>&gt; action) =&gt;
+            e != stop ? 
+                While1Action1(action(e) + 1, stop, action) : 
+                action(e);    <span class="com">// Last step which will run</span>
+
+        <span class="com">// Tests</span>
+        Func&lt;<span class="key">int</span>, <span class="key">int</span>&gt; action = e =&gt; { Console.WriteLine(<span class="str">"Value is {0}"</span>, e); <span class="key">return</span> e; };
+        <span class="key">int</span> a = Algorithms.While1Action1(0, 3, action);
+        Assert.AreEqual(3, a);
+</pre>
+
+<p>Output:
+<pre class="cscode">
+        Value is 0
+        Value is 1
+        Value is 2
+        Value is 3
+</pre></p>
+
+<p>Steps:<br/>
+<ul>
+    <li>The complementary "action" function receives the current argument value</li>
+    <li>The function performs its instructions; it needs not use the argument value</li>
+    <li>The function returns the argument value</li>
+</ul></p>
+
+<p>In this example, we're using a <i>stop</i> condition, instead of a <i>while</i> condition. When using a <i>stop</i> condition, the expression must be <i>negated</i> with respect to the equivalent while condition.</p>
+
+<p>The <i>action</i> here is an imperative construction; but it is defined in <i>user code</i> and isolated from <code>while</code>, which is pure. In a pure functional language, special imperative constructs might be used. The alternative would be:</p>
+
+<p class="uplegend">L. 8. Imperative recursive while with action</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> <span class="key">int</span> While1Action2(<span class="key">int</span> e, <span class="key">int</span> stop, Action&lt;<span class="key">int</span>&gt; action)
+        {
+            action(e);
+            <span class="key">return</span> e != stop ? 
+                While1Action2(e + 1, stop, action);
+                e;
+        }
+
+        <span class="com">// Tests</span>
+        Action&lt;<span class="key">int</span>&gt; action = e =&gt; Console.WriteLine(<span class="str">"Value is {0}"</span>, e);
+        <span class="key">int</span> a = Algorithms.While1Action2(0, 3, action);
+        Assert.AreEqual(3, a);
+</pre>
+
+<p>Output:
+<pre class="cscode">
+        Value is 0
+        Value is 1
+        Value is 2
+        Value is 3
+</pre></p>
+
+<p>This imperative block is not needed. Since the argument value return slot in the recursive while function is <i>necessary</i>, it offers a guaranteed place to declare an action. But as we can see, a recursive <code>while</code> needn't be functional.</p>
+
+<p>Let's upgrade the pure, recursive <code>while</code> by, consecutively:</p>
+
+<ol>
+    <li>Passing in a <i>predicate</i> condition for halting recursion</li>
+    <li>Passing in a <i>step</i> function for transforming argument values</li>
+    <li>Using a <i>while</i> condition instead of a <i>stop</i> condition</li>
+    <li>Making all arguments generic and making <code>While</code> callable from its initial value</li>
+</ol>
+
+<p class="uplegend">L. 9. Complete functional recursive while</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> <span class="key">int</span> While2(<span class="key">int</span> e, Predicate&lt;<span class="key">int</span>&gt; stop) =&gt;
+            !stop(e) ? 
+                While2(e * 2, stop) : 
+                e;
+
+        <span class="key">public</span> <span class="key">static</span> <span class="key">int</span> While3(<span class="key">int</span> e, Func&lt;<span class="key">int</span>, <span class="key">int</span>&gt; step, Predicate&lt;<span class="key">int</span>&gt; stop) =&gt;
+            !stop(e) ? 
+                While3(step(e), step, stop) : 
+                e;
+
+        <span class="key">public</span> <span class="key">static</span> T While&lt;T&gt;(<span class="key">this</span> T e, Func&lt;T, T&gt; step, Predicate&lt;T&gt; @while) =&gt;
+            @while(e) ? 
+                step(e).While(step, @while) : 
+                e;
+
+        <span class="key">public</span> <span class="key">static</span> T WhileAction&lt;T&gt;(<span class="key">this</span> T e, Func&lt;T, T&gt; step, Predicate&lt;T&gt; @while, Func&lt;T, T&gt; action) =&gt;
+            @while(e) ? 
+                step(action(e)).WhileAction(step, @while, action) : 
+                action(e);
+
+        <span class="com">// Tests</span>
+        <span class="key">int</span> a = Algorithms.While2(2, e =&gt; e == 8);
+        Assert.AreEqual(8, a);
+
+        <span class="key">int</span> a = Algorithms.While3(0, e =&gt; e + 1, e =&gt; e == 3);
+        Assert.AreEqual(3, a);
+
+        <span class="key">string</span> a = <span class="str">""</span>.While(e =&gt; e + <span class="str">"a"</span>, e =&gt; e != <span class="str">"aaaaa"</span>);
+        Assert.AreEqual(<span class="str">"aaaaa"</span>, a);
+
+        Func&lt;<span class="key">string</span>, <span class="key">string</span>&gt; action = e =&gt; { Console.WriteLine(<span class="str">"Value is {0}"</span>, e); <span class="key">return</span> e; };
+        <span class="key">string</span> a = <span class="str">""</span>.WhileAction(e =&gt; e + <span class="str">"a"</span>, e =&gt; e != <span class="str">"aaaaa"</span>, action);
+        Assert.AreEqual(<span class="str">"aaaaa"</span>, a);
+</pre>
+
+<p>Output:
+<pre class="cscode">
+        Value is 
+        Value is a
+        Value is aa
+        Value is aaa
+        Value is aaaa
+        Value is aaaaa
+</pre></p>
+
+<p>Let's plug the functional <code>while</code> into <code>Sort()</code>.</p>
+
+<p class="uplegend">L. 10. Sort() with functional while</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; SortB&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll)
+            where T : IComparable&lt;T&gt;
+        {
+            <span class="key">var</span> newColl = <span class="key">new</span> T[coll.Count()];
+            <span class="key">for</span> (<span class="key">int</span> i = 0; i &lt; coll.Count(); ++i)
+            {
+                <span class="key">int</span> iCursor = i.While(            <span class="com">// Functional while</span>
+                    e =&gt; e - 1,                   <span class="com">// Step function</span>
+                    e =&gt; e &gt; 0 &amp;&amp; (newColl.ElementAt(e - 1).CompareTo(coll.ElementAt(i)) &gt; 0) <span class="com">// While condition</span>
+                );
+                <span class="key">if</span> (iCursor &lt; i)
+                    newColl = DisplaceOneFrom(newColl, iCursor).ToArray();
+                newColl[iCursor] = coll.ElementAt(i);
+            }
+            <span class="key">return</span> newColl;
+        }
+
+        <span class="com">// Tests</span>
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1 };
+        <span class="key">var</span> coll2 = coll.SortB();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 1, 2, 3, 4 }));
+
+
+        <span class="key">var</span> coll = <span class="key">new</span> <span class="key">int</span>[] { 3, 2, 4, 1, 11, 8, 9, 11, 27, 5 };
+        <span class="key">var</span> coll2 = coll.SortB();
+        Assert.IsTrue(coll2.SequenceEqual(<span class="key">new</span> <span class="key">int</span>[] { 1, 2, 3, 4, 5, 8, 9, 11, 11, 27 }));
+</pre>
+
+<p>Let's substitute now the <code>for</code> loop in <code>SortB</code> for a functional <code>while</code>.</p>
+
+<p class="uplegend">L. 11. Sort() with functional while and for</p>
+<pre class="cscode">
+        <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; SortC&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll)
+            where T : IComparable&lt;T&gt;
+        {
+            <span class="key">var</span> newColl = <span class="key">new</span> T[coll.Count()];
+            0.WhileAction(                     <span class="com">// Functional for loop</span>
+                e =&gt; e + 1,                    <span class="com">// Step function</span>
+                e =&gt; e &lt; coll.Count() - 1,     <span class="com">// For condition</span>
+                e =&gt;                           <span class="com">// Action</span>
+                    {
+                        <span class="key">int</span> eCursor = e.While(
+                            f =&gt; f - 1,
+                            f =&gt; f &gt; 0 && (newColl.ElementAt(f - 1).CompareTo(coll.ElementAt(e)) &gt; 0)
+                        );
+                        <span class="key">if</span> (eCursor &lt; e)
+                            newColl = DisplaceOneFrom(newColl, eCursor).ToArray();
+                        newColl[eCursor] = coll.ElementAt(e);
+
+                        <span class="key">return</span> e;
+                    }
+            );
+            <span class="key">return</span> newColl;
+        }
+</pre>
+
+<p>The <code>for</code> loop ending condition was transformed into a <a href="#lastconditionwhichwillrun">"last condition which will run"</a> condition. Other than that, the substitution was straightforward; we just copied the <code>for</code> loop body into the third argument for the functional <code>while</code>.</p>
+
+<p>The block is still imperative. We can spot a simple dependency in the block: the two statements following the <code>eCursor</code> definition depend on <code>eCursor</code>. This means the <code>eCursor</code> definition can become a parameter for the statements, which we encapsulate in a function:</p>
+
+<p class="uplegend">L. 12. While as parameter</p>
+<pre class="cscode">
+            0.WhileAction(
+                e =&gt; e + 1,
+                e =&gt; e &lt; coll.Count() - 1,
+                e =&gt;
+                    <span class="key">new</span> Func&lt;<span class="key">int</span>, <span class="key">int</span>&gt;(eCursor =&gt;        <span class="com">// For loop body</span>
+                    {
+                        <span class="key">if</span> (eCursor &lt; e) 
+                            newColl = DisplaceOneFrom(newColl, eCursor).ToArray();
+                        newColl[eCursor] = coll.ElementAt(e);
+                        <span class="key">return</span> e;
+                    })(e.While(                          <span class="com">// While function</span>
+                        f =&gt; f - 1,
+                        f =&gt; f &gt; 0 && (newColl.ElementAt(f - 1).CompareTo(coll.ElementAt(e)) &gt; 0)
+                    ))
+            );
+</pre>
+
+<p>Doing this, the imperative core of the code is progressively isolated, while the non-imperative parts are expressed in pure functional style.</p>
+
+<p>The <code>While</code> expression represents execution of a recursive function which yields values, according to a value function, until the looping condition, also a function, is satisfied. Both the value function and the loop function are functions of the current iteration index. The <code>While</code> function in the above code executes first, and its value is passed as a parameter to the <code>for</code> loop body, which uses it to process its current iteration of the collection.</p>
+
+<!--
+<p>If the <code>while</code> function as a parameter seems hard to read inline, by being a function, it can be externalized. Let's externalize both the <code>for</code> loop body and the <code>while</code> function:</p>
+
+<pre class="cscode">
+            <span class="com">/// &lt;summary&gt;</span>
+            <span class="com">/// Computes the number of positions between the current position in a parameter collection and the first </span>
+            <span class="com">/// largest element in the collection</span>
+            <span class="com">/// &lt;/summary&gt;</span>
+            <span class="key">static</span> <span class="key">int</span> CompareCursor&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll, IEnumerable&lt;T&gt; parameterColl, <span class="key">int</span> pos)
+                where T : IComparable&lt;T&gt; =&gt;
+                pos.While(
+                    p =&gt; p - 1,
+                    p =&gt; p &gt; 0 && (coll.ElementAt(p - 1).CompareTo(parameterColl.ElementAt(pos)) &gt; 0)
+                );
+    
+            <span class="com">/// &lt;summary&gt;</span>
+            <span class="com">/// Moves elements one position to the right, if necessary, starting at the informed position</span>
+            <span class="com">/// &lt;/summary&gt;</span>
+            <span class="key">static</span> <span class="key">int</span> DisplaceAndSet&lt;T&gt;(T[] coll, <span class="key">int</span> cursorPos, <span class="key">int</span> pos)
+            {
+                <span class="key">if</span> (cursorPos &lt; pos)
+                    coll = DisplaceOneFrom(coll, cursorPos).ToArray();
+                coll[cursorPos] = coll.ElementAt(pos);
+                <span class="key">return</span> pos;
+            }
+    
+            <span class="com">/// &lt;summary&gt;</span>
+            <span class="com">/// Sorts a collection.</span>
+            <span class="com">/// &lt;/summary&gt;</span>
+            <span class="key">public</span> <span class="key">static</span> IEnumerable&lt;T&gt; SortC2B&lt;T&gt;(<span class="key">this</span> IEnumerable&lt;T&gt; coll)
+                where T : IComparable&lt;T&gt;
+            {
+                <span class="key">var</span> newColl = <span class="key">new</span> T[coll.Count()];
+                0.WhileAction(
+                    e =&gt; e + 1, 
+                    e =&gt; e &lt; coll.Count() - 1, 
+                    e =&gt; DisplaceAndSet(newColl, CompareCursor(newColl, coll, e), e)
+                );
+                <span class="key">return</span> newColl;
+            }
+</pre>
+-->
+
+<p>The <code>for</code> loop body, as the core of the algorithm, alters an array arbitrarily and then attributes a new element to the array. The imperative characteristic here is a function of the outer <code>for</code> loop, which operates over elements of the original collection, returning new elements (a so-called projection). Objects altered by a function which survive the scope of the function (and are not its return value) are called <i>side effects</i> of the function. By generating collections in between iterating over elements an returning new elements, the collection generation step is characterized as imperative.</b></p>
+
+<h3>Call stack</h3>
+
+<p>Let's compare the call stacks, at the end of the last iterations, between the imperative and the recursive-loop versions of the algorithm.</p>
+
+<pre class="cscode">
+        // Imperative
+
+        >   Algorithms.Sort<int>(System.Collections.Generic.IEnumerable<int> coll) Line 82
+            Tests.AlgosTests.Sort1() Line 79
+            [External Code]	
+
+        // Recursive-loop
+            
+        >   Algorithms.SortC2.AnonymousMethod__3(int eCursor) Line 187
+            Algorithms.SortC2.AnonymousMethod__2(int e) Line 182
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.WhileAction<int>(int e, System.Func<int, int> step, System.Predicate<int> while, System.Func<int, int> action) Line 121
+            Algorithms.SortC2<int>(System.Collections.Generic.IEnumerable<int> coll) Line 175
+            Tests.AlgosTests.SortC2() Line 202
+            [External Code]	           
+</pre>
+
+<p>As we can see, each iteration of a recursive loop is a nested function call (as opposed to a single function call in a non-recursive loop). This brings about challenges, like the size limit of the stack, which may be not present, or less frequently occurring, in imperative implementations.</p>
+
+<p>In the next installment, we'll look into turning the implementation into pure-functional, by expressing the algorithm as a single transformation without interacting with external objects outside of its inputs and outputs.</p>
+
+<!--
+<pre class="cond">
+sort orig array:
+    new array;
+    each element of orig array:
+        calculate displacement;
+        if displacement, substitute new array;
+        set element in new array;
+    return new array;
+</pre>
+
+<p>Our goal is to achieve:</p>
+
+<pre class="cond">
+sort orig array:
+    project each element of orig array as:
+        new element on either unmodified or displaced array.
+</pre>
+-->
+
+<h3>Article solution</h3>
+
+<p>The article's complete code listing can be executed at the <a href="https://dotnetfiddle.net/NerJCH" target="_blank">dotnetfiddle solution</a>.</p>
+</div>
+
+<div class="breadcrumb"></div>
+
+<footer>
+Copyright &copy 2018-2024 Pedro Sobota. All rights reserved.
+</footer>
+
+</body>
+</html>
