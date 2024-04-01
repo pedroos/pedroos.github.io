@@ -179,7 +179,7 @@ Collections.Column           , Properties.Typing
 <pre>
 PropertyProvider v0.1
 
-PP> load D:\Dev\src\Node\PropertyProviderConsoleSample.txt
+PP> load D:\PropertyProviderConsoleSample.txt
 2 classes constructed
 14 class elements added
 2 relations defined
@@ -362,22 +362,22 @@ PP> Collections v Properties ? Array
 
 <ul>
     <li>A project can contain any number of classes and relations. The "Properties" classes is not hardcoded and is just a "default" class name for properties of objects. Any classes of objects could be related</li>
-    <li>Tables are paged to allow a constant width for inspection. Full tables can be printed to files with `save`</li>
+    <li>Tables are paged to allow a constant width for inspection. Full tables can be printed to files with <code>save<code></li>
     <li>Reverse relations are automatically created from any relation</li>
     <li>The <code>A v B ! C</code> syntax, where <code>A</code> is the "key" class and <code>B</code> is the "value" class, performs <i>similarity scoring</i> (non-unique) in the relation with respect to element <code>C</code> of the key class. The descending similarity score is shown in parenthesis on the key cell</li>
     <li><i>Dissimilarity scoring</i> is also available with the <code>?</code> operator</li>
     <li>The double operators <code>!!</code> and <code>??</code> for scoring shows <i>true or false values</i> (which we call "characteristics"), as opposed to <i>equal or distinct values</i> (for similarity or dissimilarity respectively), for each key class</li>
-    <li>The project abstracts class element names as <i>Symbols</i>, which allows:
+    <li>The project abstracts class element names as <i>Symbols</i>, which allows to:
         <ul>
-            <li>Uniqueness of Symbols on a class</li>
-            <li>Integer representation of Symbols on a powers-of-two scale: because 1) combination of elements on a Set is expressible as a sum, 2) powers-of-two sums are unique, and 3) classes are Sets, then element combinations, and thus Objects in a class, are expressible as unique integers</li>
+            <li>Enforce uniqueness of Symbols on a class</li>
+            <li>Implement integer representation of Symbols on a <b>powers-of-two</b> scale: because 1) combination of elements on a Set is expressible as a sum, 2) powers-of-two sums are unique, and 3) classes are Sets, then element combinations, and thus Objects in a class, are expressible as unique integers</li>
         </ul>
     </li>
 </ul>
 
 <h2>Implementation</h2>
 
-<p>The operations have been implemented in a command line program written in C# 11 and compiled with <code>bflat</code> and released under AGPL-3.0. Links:</p>
+<p>The operations have been implemented in a command line program written in C# 11 and released under the AGPL-3.0. Links:</p>
 
 <ul>
     <li><a href="https://www.github.com/pedroos/PropertyProviderConsole" title="GitHub" target="_blank">GitHub</a></li>
