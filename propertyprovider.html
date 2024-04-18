@@ -112,31 +112,27 @@ MathJax = {
 
 <div class="centrd">
 
-<!--
-<h2>Background</h2>
+<p>It seems I'm back to writing in this space! So much happened in this period (the last three years).</p>
 
-<p>It seems I'm back to writing in this space after a few years. It's a little surprising even to myself as I have momentarily thought I'd not retake it, and have recently trimmed it down to only a few things.<p>
+<p>In this time, new areas sprung up in the market, but it's not like we should stop what we were doing.</p>
 
-<p>So much happened in this period (the last three years), that it's truly a blog in itself. A staggering amount of changes both in my life and in the industri(es) in which I work took place, and while a share of definitely sad moments and grief may be present, other areas seem more exciting than before. It is in this environment of expansion of possibilities and the actual physical expansion of computing taking place that I find it appropriate to once again use this space for my longer and less pointed rants.</p>
+<p>Sometimes technologically similar projects are born out of different needs, with different viewpoints and targets.</p>
 
-<p>In this time, whole new areas opened up to satisfy curiosity and enrich our ongoing projects, but it's not like we should stop what we were doing. Despite the extreme advancement of projects on a global scale, it's true that each person's personal projects contain their individual perspectives and philosophies and this puts projects on a competition arena only if their creators so wish; the value of doing less sophisticated things when more sophisticated things are available is not null. While knowledge is (it seems) a single volume, projects exibit a certain locality due to dependence on their creators which operate in certain physical places under specific geopolitical circumstances and impose different philosophies and policies. What seems like the same on the surface is sometimes not the same.</p>
-
-<p>Sometimes technologically similar projects are born out of very different needs, with different viewpoints and widely different targets.</p>
+<p>So where was I last time? I have now implemented some part of what previously were just thoughts. Controlling the interest branching behavior has been an important skill to develop.</p>
 
 <h2>Concept</h2>
 
-<p>So where was I last time I wrote here? Funnily enough, I have not changed mind a lot; but I have implemented a lot of what previously were just thoughts. This of course, in recursion, opened new lines of enquiry, and so on, and controlling this interest branching behavior has been a skill to develop and I did practice it quite a bit. The learning is that yes, you don't finish anything if you don't control what you're doing. On the other hand, you can't also jeopardize your own future by failing to take note of interesting new developments, so it's about finding an optimum.</p>
--->
+<p>I had written a group of articles going on about Mathematical topics under a computational light, and I've taken them off for revision. I don't think I'll put them up again, in revised form, any soon, but one of the topics I went over were initial impressions over trying to exhaust combinations of properties of certain abstract structures, considered physical structures in programming and completely abstract structures in Mathematics: for example, sets, tuples, lists, and so on. (Well, it just so happens I don't believe a lot in this distinction, but I won't go into it here.) I'll just mention this topic provoked an advancement where I actually mapped a complete small set of combinations of properties of collections, and in the process, I realized I could now objectively rank them according to said set of properties, and discover new objects.</p>
 
-<p>Last time I wrote here, I had written a group of articles going on about Mathematical topics under a computational light, and I've taken them off for revision. I don't think I'll put them up again, in revised form, any soon, but one of the topics I went over were initial impressions over trying to exhaust combinations of properties of certain abstract structures, considered physical structures in programming and completely abstract structures in Mathematics: for example, sets, tuples, lists, and so on. Well, it just so happens I don't believe a lot in this distinction, but I won't go into it here. I'll just mention this topic provoked an advancement where I actually mapped a complete small set of combinations of properties of collections, and in the process, I realized I could now objectively rank them according to said set of properties, and discover new objects.</p>
+<p>In a relation where objects are related to properties, we implemented scoring algorithms which ordered the objects with respect to a single object of the set and supplied a 'distance' measure between two objects. We now knew the most similar and dissimilar objects with respect to an object. We could, given a set of objects related to properties, check for holes and define missing combinations of properties as new, previously unknown, objects.</p>
 
-<p>This means we now have a relation where objects are related to properties, and we implement scoring algorithms which order the objects with respect to a single object and supply a 'distance' measure between any two objects. We now know the most similar and dissimilar objects with respect to an object. We can, given a set of objects related to properties, check for holes and define missing combinations of properties as new, previously unknown, objects.</p>
+<p>In the program I'll present in this article, these facets are present minimally in a convenient and self-contained form that contains concise and robust code, can be compiled easily using an open source compiler, run cross-platform, and carry no external dependencies, while providing functional usability. This is the beginning of a set of tools which progressively expand on the operations available while following the same minimal and canonical focus. More tools with specific applications in mind will also be implemented as needed, to give different forms to access the same functionality, or test applied concepts.</p>
 
-<p>In the program I'll present in this article, I implemented these facets minimally in a convenient and self-contained form that contains concise and robust code, can be compiled easily using an open source compiler, run cross-platform, and carry no external dependencies, while providing functional usability. This is the beginning of a set of tools which progressively expand on the operations available while following the same minimal and canonical focus. More tools with specific applications in mind will also be implemented as needed, to give different forms to access the same functionality, or test applied concepts.</p>
+<p>The strength of this approach is that the <i>meaning</i> of properties themselves is left for interpretation; the tool is mostly concerned with semantics and knowledge mapping. Variations of property sets or the meaning of properties can be stipulated; each combination is a project. The tool might be useful in occasions where a sizeable number of concepts are discussed, and, while the subject matter of the discussion is open for interpretation and philosophical, a semantic tool helps onboarding new participants into the discussion, or finding edge cases for practitioners, or controlling scopes of discourse; or keeping structure for documentation of complexity.</p>
 
-<p>The strength of this approach is that the <i>meaning</i> of properties themselves is left for interpretation; the tool is mostly concerned with semantics and knowledge mapping. Variations of property sets or the meaning of properties can be stipulated; each combination is a project. The tool might be useful in occasions where a sizeable number of concepts are discussed, and, while the subject matter of the discussion is open for interpretation and philosophical, a powerful semantic tool helps onboarding new participants into the discussion, or finding edge cases for pratictioners, or discussing expansions or retractions of concepts in a measured, controlled way; or keeping structure for documentation of complexity.</p>
+<h2>Demonstration</h2>
 
-<p>The following reproductions should give a better illustration than any explanation.</p>
+<p>The following technical display should give a better illustration than any explanation.</p>
 
 <p>Given the following input file:</p>
 
@@ -358,7 +354,7 @@ PP> Collections v Properties ? Array
 +---------------------------+-----------------+-----------------+-----------------+-----------------+-----------------+
 </pre>
 
-<p>Observations:</p>
+<h2>Observations</h2>
 
 <ul>
     <li>A project can contain any number of classes and relations. The "Properties" classes is not hardcoded and is just a "default" class name for properties of objects. Any classes of objects could be related</li>
@@ -377,7 +373,7 @@ PP> Collections v Properties ? Array
 
 <h2>Implementation</h2>
 
-<p>The operations have been implemented in a command line program written in C# 11 and released under the AGPL-3.0. Links:</p>
+<p>The operations have been implemented in a command line program written in C# 11 and released under the AGPL-3.0.</p>
 
 <ul>
     <li><a href="https://www.github.com/pedroos/PropertyProviderConsole" title="GitHub" target="_blank">GitHub</a></li>
