@@ -87,6 +87,11 @@ h1 {
     text-align: center;
     line-height: 50px;
 }
+h1.maintitle {
+    font-family: monospace;
+    font-style: italic;
+    font-weight: normal;
+}
 h2 {
     font-size: 32x;
     margin-top: 50px;
