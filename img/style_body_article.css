@@ -87,10 +87,12 @@ h1 {
     text-align: center;
     line-height: 50px;
 }
-h1.maintitle {
+header .maintitle {
     font-family: monospace;
     font-style: italic;
     font-weight: normal;
+    font-size: 38px;
+    text-align: center;
 }
 h2 {
     font-size: 32x;
@@ -297,6 +299,22 @@ blockquote.special p {
     margin: 0 !important;
     padding: 0 !important;
 }
+blockquote.special.chat {
+    /* margin: 0;
+    padding: 0; */
+    position: relative;
+	font-family: 'EB Garamond', serif;
+	font-size: 18px;
+    width: 60%;
+	line-height: 1.4;
+	text-rendering: optimizeLegibility;
+	/*font-smoothing: antialiased;*/
+	/* -webkit-font-smoothing: antialiased;
+	-moz-osx-fon-smoothing: grayscale; */
+	justify-content: space-around;
+    margin-left: auto;
+    margin-right: auto;
+}
 /* blockquote.special p:first-of-type:before {
 	content: '\201c';
 	position: absolute;
@@ -377,6 +395,23 @@ div.codeOut {
 }
 .framed.mathtoc ul span.blogtag {
     /* display: none; */
+}
+.framed.toc2 h1 {
+    display: inline-flex;
+}
+.framed.toc2 div.blogtags {
+    display: inline-flex;
+}
+.framed.toc2 div.article_details {
+    display: inline-flex;
+    font-size: 14pt;
+    margin-bottom: 25px;
+    text-align: right;
+    float: right;
+}
+.framed.toc2 h1 {
+    text-align: left;
+    font-size: 24px;
 }
 .MathJax_tag, .MathJax_ref {
     color: blue;
