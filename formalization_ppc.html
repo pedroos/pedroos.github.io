@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<head>
+
+<script>
+MathJax = {
+  loader: {load: ['[tex]/tagformat']},
+  // startup: {
+  //   pageReady: () => {
+  //     return MathJax.startup.defaultPageReady();
+  //   }
+  // },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']], 
+    packages: {'[+]': ['tagformat']},
+    // color: {
+    //   padding: '5px'
+    // }
+    //tags: 'ams',
+    // tagformat: {
+    //   // number: (n) => n.toString(),
+    //   tag:    (tag) => 
+    //     //'((' + tag + '))',
+    //     'Formula(' + tag + ')',
+    //   // id:     (id) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+    //   // url:    (id, base) => base + '#' + encodeURIComponent(id),
+    // }
+  }, 
+  chtml: {
+    scale: 1
+  }
+}
+</script>
+
+<script src='img/MathJax-3.1.2-custom/tex-mml-chtml.js'></script>
+
+<link rel="stylesheet" type="text/css" href="img/style_header.css"/>
+<link rel="stylesheet" type="text/css" href="img/style_body_article.css"/>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="article">
+
+<div class="content">
+
+<!-- Begin article "A Formalization of Property Provider" -->
+
+  <article>
+
+<h1>A Formalization of Property Provider</h1>
+
+<div class="article_details">
+<hr/>
+</div>
+
+<div class="centrd">
+
+<p>In this article, we'll aim to provide a formalization of the concepts present in the <a href="propertyprovider.html">Property Provider</a> software. In the original article, there were points of vagueness such as how objects relate to properties. Pursuing exact definitions provides a logical foundation and a useful vocabulary for the application.</p>
+
+<p>Property Provider works with the abstraction of Key and Value, where each one has an associated Class. On a lower level, the representation uses Relations. Key and Value, in turn, are less abstract objects than Relations and impose additional rules.</p>
+
+<h2>Relations</h2>
+
+<p>Let's assume only binary Relations from here on. To fully define a Relation, we have to begin by clearing the question of whether one should admit a number higher than two as sources of its elements? A Relation can elementarily be defined as a set of Tuples. The elements in such Tuples are not formally said to belong to any particular sets, although it is generally mentioned which sets are being related. In our computation-oriented context, this may be seen as a form of "type erasure", risking the generation of a malformed Relation if an element from a third set, not originally in the Relation, is appended to it. We'll try to avoid this. Additionally, when a Relation is plotted in the form of a table, it's observed that the sets which form the Relation translate into columns. Because of the usefulness of tables and their closeness to Relations, we use this as further reason to assign sets to Relations, and, by adding to them a name label, we call them Classes.</p>
+
+<p>We give initially only the differences, instead of listing all properties under consideration:</p>
+
+<ul>
+    <li>A <b>Class</b> is a Set with a Name property</li>
+    <li>A <b>Column</b> is a Class without a <b>Uniqueness</b> property</li>
+    <li>A <b>Relation</b> is a Set of Tuples where Tuples have specific position elements drawn from specific Sets (classical definition, which we don't use) or Classes</li>
+    <li>A <b>List</b> is a Set without a Uniqueness property</li>
+    <li>A <b>Table</b> is a Set of Tuples where Tuples have specific position elements drawn from specific Classes, from which the requirement of Uniqueness is removed</li>
+</ul>
+
+<p>In the Table definition, Uniqueness is removed, without obvious effects, forming a List from the Set of Tuples; the Classes then form Columns in the Table.</p>
+
+<p><!--Conversion: t-->Removing the Uniqueness property from the Classes of a Relation forms the Tables. If we, conversely, enforce Uniqueness on a Table, we obtain a Relation. (Again, we're only considering, in this occasion, two-element Relations and Tables.)</p>
+
+<blockquote class="special">If in the above we allow Relations and Tables to contain identical Classes as their first and second/last elements, the possibility of <b>Recursion</b> is introduced. For now, such option is ignored.</blockquote>
+
+<p>While normally Sets that compose a Relation don't have a natural identification means (other than through program temporary variables, which we won't consider) and the Relation, formed as Tuples taken as individual elements, do not allow storing which or from how many Sets elements originate, in a Class-Relation object, instead, defining the Classes' names provide this information thus yielding the desired persistent property.</p>
+
+<p>Now, Columns are synonyms for Classes, except for the absence of the property of Uniqueness.</p>
+
+<h3>Naming, Element Naming</h3>
+
+<p>We now go into into more detailed behaviors.</p>
+
+<p>A collection type with a Name property defined could be taken to "transmit" or store its name in each of its elements, in specific ways. Here we describe the two pertinent cases:</p>
+
+<ul>
+    <li>A Named Set (a Class) gives its name to its elements, which acquire the Name property. Such a fact causes the Class to be said to be Element Named. Thus, the Class is both Named and Element Named, and one as a consequence of the other;</li>
+    <li>A Relation, under a pair of Classes, is formed by a set of Tuples which are constituted from elements of each respective Class. Thus, under the previous point, such Tuple's elements acquire Names from the Class, and, as all such elements are Named in each Tuple, then the Tuples themselves are said to be Element Named. This does <i>not</i> cause the Relations to be deemed Element Named.</li>
+</ul>
+
+<p>This allows us to derive:</p>
+
+<ul>
+    <li><b>Definition.</b> A Named Tuple is a Tuple with an Element Naming property.</li>
+    <li><b>Characterization</b>. A Relation or Table is, respectively, a Set or List of Named Tuples.</li>
+</ul>
+
+<blockquote class="special">A Tuple with Element Naming could more accurately be called 'Element Named Tuple', but the name 'Named Tuple' is more habitual and we don't foresee, at this moment, the usefulness of a Tuple type containing a Naming property.</blockquote>
+
+<blockquote class="special">Whether in this behavior we may inadvertently be producing redundant object definitions (as in i.e. "Is a Tuple without Naming a Column?") can ultimately be determined by the very system we're formalizing. Since we're still midway through, we'll have to defer this verification.</blockquote>
+
+<img src="img/formalization_ppc_0a3.svg" width="600" style="margin-top: 50px"/>
+
+<h2>L, R</h2>
+
+<p>An <b>LValue</b> is the first element in a binary Tuple. An <b>RValue</b> is the final one.</p>
+
+<p>The <b>LSet</b> is the Set of LValues in a Set of Tuples. The <b>RSet</b> is the corresponding one of the RValues.</p>
+
+<p>The <b>LClass</b> is the Class of LValues in a Set of Named Tuples with the names of the LValues drawn from a Class, such as a Relation. The <b>RClass</b> is the corresponding one of the RValues.</p>
+
+<p>The <b>LColumn</b> and <b>RColumn</b> are the equivalent of LClass and RClass for Tables.</p>
+
+<blockquote class="special">The "L" and "R" in those definitions are not syntactical, not meant to represent spatiality. Syntactically, the order of operands could be altered without changing results but, since we don't foresee a use case for this scenario, we adopt the familiar spatial "L", "R" names.</blockquote>
+
+<img src="img/formalization_ppc_4de.svg" width="900" style="margin-top: 50px"/>
+
+<h2>Keys, Values</h2>
+
+<p>Up to now, we've been defining foundational objects or auxiliary definitions. We now reach the level of abstraction pertaining to the main system being formalized.</p>
+
+<p>We now introduce a Relations universe, composed of a finite number of Relations.</p>
+
+<p>A <b>Key</b> is a chosen LClass from one of the Relations in the Relation universe. We consider <i>Choosing</i> an action with computational value, and use it to formally differentiate any non-chosen LClass from a <b>Key</b>.</p>
+
+<p>A <b>Value</b> is any Relation where the LClass equals the chosen Key.</p>
+
+<p>The <b>Value Set</b> is the Set of all Values with respect to the chosen Key.</p>
+
+<p style="text-align: center"><i>In progress...</i></p>
+
+<!--
+<p>TODO: drawing (universe)</p>
+
+<h2>Objects and Properties</h2>
+
+<p>PAROU: explain the PropertyProvider part, in terms of Value Sets (tough). Understand Value Sets.</p>
+
+<h2>Conclusion</h2>
+
+<p>It turns out Property Provider has three levels of abstraction, from less to more abstracted:</p>
+
+<ol>
+  <li>Objects and Properties</li>
+  <li>Keys and Values</li>
+  <li>Relations</li>
+</ol>
+
+<p>Each higher level is based on the lower level. Because of this, the application is implemented at the lowest level of Relations. The end user interacts with it at the highest level of Objects and Properties. The middle and highest levels are described only informally in the implementation. The work done on this article is to bridge, formally, the two extremal levels of abstraction.</p>
+
+<p>Hopefully, this article has cleared up the definitions of terms used up to this point in Property Provider and introduced a number of useful constructs for further conceptual expansion.</p>
+
+-->
+
+</div>
+
+<!-- </details> -->
+
+</article>
+
+<!-- End article "A Formalization of Property Provider" -->
+
+</div>
+
+</body>
+</html>
