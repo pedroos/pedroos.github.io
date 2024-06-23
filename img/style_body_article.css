@@ -389,6 +389,9 @@ div.codeOut {
     border: 1px solid #bbbbbb;
     padding: 12px;
 }
+header #toppic {
+    margin-left: auto; margin-right: auto; width: 600px; margin-bottom: 50px
+}
 .framed.mathtoc ul {
     font-family: 'Asap';
     font-size: 18px;
