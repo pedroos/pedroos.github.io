@@ -94,6 +94,14 @@ header .maintitle {
     font-size: 38px;
     text-align: center;
 }
+header h1.maintitle2 {
+    /*font-family: "Gwendolyn", cursive;*/
+    font-family: "Gwendolyn", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 4em;
+    margin-bottom: 20px;
+}
 h2 {
     font-size: 32x;
     margin-top: 50px;
@@ -401,7 +409,17 @@ div.codeOut {
     padding: 12px;
 }
 header #toppic {
-    margin-left: auto; margin-right: auto; width: 820px; margin-bottom: 50px
+    margin-left: auto;
+    margin-right: auto;
+    width: 820px;
+    margin-bottom: 50px;
+}
+header #toppic p {
+    text-align: center;
+    font-family: helv, arial;
+    font-size: 13pt;
+    margin-top: 14px;
+    margin-bottom: 4px;
 }
 .framed.mathtoc ul {
     font-family: 'Asap';
