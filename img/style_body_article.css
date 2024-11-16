@@ -422,7 +422,7 @@ header #toppic p {
     margin-bottom: 4px;
 }
 .framed.mathtoc ul {
-    font-family: 'Asap';
+    /*font-family: 'Asap';*/
     font-size: 18px;
 }
 .framed.mathtoc ul span.blogtag {
