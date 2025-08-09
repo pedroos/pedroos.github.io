@@ -3,8 +3,8 @@
 <meta charset="utf-8"/>
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Pedro Sobota's Weblog">
-  <meta name="keywords" content="Pedro Sobota's Weblog'">
+  <meta name="description" content="Pedro Sobota's GitHub Page">
+  <meta name="keywords" content="Pedro Sobota">
   <meta name="author" content="Pedro Sobota">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pedro Sobota</title>
@@ -65,19 +65,14 @@ MathJax = {
 
 <header>
 
-  <h1 class="maintitle">Pedro Sobota</h1>
+  <h1 class="maintitle">Pedro Sobota's GitHub Page</h1>
 
-  <div id="toppic">
+  <!-- <div id="toppic"> -->
     <!-- <img src="img/Header.png" width="800" height="300" alt="Header image"/> -->
-    <p>
-      Software engineer. <a href="CV-PedroSobota.pdf" target="_blank" alt="CV">CV</a>
-    </p>
-    <p>
-      <a href="https://www.linkedin.com/in/pedrooss/" target="_blank" alt="LinkedIn">LinkedIn</a> |
-      <a href="https://www.x.com/pedro_o_x/" target="_blank" alt="x.com">x.com</a> |
-      pedro@sobo.cx
-    </p>
-  </div>
+    <!-- <p><a href="https://www.linkedin.com/in/pedrooss/" target="_blank" alt="LinkedIn">LinkedIn</a></p> -->
+    <!-- <p><a href="https://www.x.com/pedro_sobota/" target="_blank" alt="x.com">x.com</a></p> -->
+    <!-- <p>Contact: pedro@sobo.cx</p> -->
+  <!-- </div> -->
 
 <!-- 
   <div class="maintitle">Pedro Sobota</div> -->
@@ -88,12 +83,36 @@ MathJax = {
 
 <div class="content">
 
+  <p style="text-align: center; font-style: italic">Hello! Welcome to my GitHub Page.</p>
+
+  <h2>🛸About</h2>
+
+  <ul>
+    <li><a href="CV-PedroSobota.pdf" target="_blank" title="CV">My CV</a>.</li>
+    <li><a href="https://github.com/pedroos" target="_blank" title="GitHub">GitHub</a>.</li>
+  </ul>
+
+  <h2>💻Software</h2>
+
+  <ul>
+    <li>strei. Play background sounds uninterrupted on Windows. <a href="https://github.com/pedroos/strei" target="_blank" title="strei">(Open link)</a></li>
+    <li>kloru. Cross-platform word-counting for the command line. <a href="https://github.com/pedroos/kloru" target="_blank" title="kloru">(Open link)</a></li>
+  </ul>
+
+  <h2>📰News</h2>
+
+  <ul>
+    <li>[25/07/17] strei v0.1 has been released. Visit the <a href="https://github.com/pedroos/strei/releases" target="_blank" title="strei releases">releases page</a>.</li>
+  </ul>
+
+  <h2>📝Blog</h2>
+
   <div class="framed mathtoc toc2">
 
 <!-- Begin article "Property Provider" -->
 
 <article>
-    <h1>Property Provider</h1>
+    <h1>Property Provider Console</h1>
     
     <!-- <div class="blogtags"><span class="blogtag algo">Logic</span><span class="blogtag algo">C#</span></div> -->
   
@@ -101,19 +120,17 @@ MathJax = {
   
     <details>
   
-    <summary><blockquote class="special"><b>Abstract: </b>This article describes the development of a semantic tool for mapping and relating objects to properties. The user can rank objects based on their properties, discover new objects, and identify gaps in property sets. The tool is designed to be minimal, open-source, cross-platform, and flexible, allowing for various interpretations of property meanings. It could be useful in discussions involving many concepts, aiding in onboarding, identifying edge cases, qualifying concepts, and maintaining structure in documentation. The implementation is in C# 11 and released under the AGPL-3.0.</blockquote></summary>
+    <summary><blockquote class="special"><b>Abstract: </b>This article describes the development of a tool for mapping and relating objects to properties. The user can rank objects based on their properties and examine object sets. <!--The tool is designed to be minimal, open-source, cross-platform, and flexible, allowing for various interpretations of property meanings. It could be useful in discussions involving many concepts, aiding in onboarding, identifying edge cases, qualifying concepts, and maintaining structure in documentation. The implementation is in C# 11 and released under the AGPL-3.0.--></blockquote></summary>
   
-    <p>In the last articles, I had written in the theme of Mathematical topics examined from a computational light, and I've taken them for revision. I don't think I'll put them up again, in revised form, any soon, but one of the topics discussed were combinations of properties of certain abstract structures, considered physical structures in programming and completely abstract structures in Mathematics: for example, sets, tuples, lists, and so on. Upon further consideration, this topic provoked an advancement where I actually mapped a complete small set of combinations of properties of collections, and in the process, I observed I could now objectively rank them according to said set of properties, and discover new objects.</p>
+    <p>As a starting point, <!--In the last articles, I had written in the theme of Mathematical topics examined from a computational light, and I've taken them for revision. I don't think I'll put them up again, in revised form, any soon, but one of the topics discussed were--> I considered combinations of properties of certain mathematical structures<!--, considered physical structures in programming and completely abstract structures in Mathematics: for example--> like sets, tuples, lists, and so on. <!--Upon further consideration, this topic provoked an advancement where--> Then, I mapped a complete set of combinations of properties, and in the process, I found out I could now rank them according to the similarity of their set of properties. This complete enumeration also allowed to discover new objects.</p>
 
-    <p>This means a relation is established relating objects to properties, and we implement scoring algorithms ordering the objects with respect to a single object and supply a 'distance' measure between any two objects. We now know the most similar and dissimilar objects with respect to an object. We can, given a set of objects related to properties, check for holes and define missing combinations of properties as new, previously unknown, objects.</p>
+    <p>I implemented a relation relating objects to properties, and a scoring algorithm ordering arbitrary objects with respect to a particular object which worked as a  similarity measure between two objects. It's now possible to identify most similar and dissimilar objects with respect to an object and check for definitional holes, defining new objects for such missing combinations of properties.</p>
     
-    <p>In the program presented in this article, these facets are implemented minimally in a convenient and self-contained form that contains concise and robust code, can be compiled easily using an open source compiler, run cross-platform, and carry no external dependencies, while providing functional usability. This is the beginning of a set of tools which progressively expand on the operations available while following the same minimal and canonical focus. More tools with specific applications in mind will also be implemented as needed, to give different forms to access the same functionality, or test applied concepts.</p>
+    <!--<p>In the program presented in this article, these facets are implemented minimally in a convenient and self-contained form that contains concise and robust code, can be compiled easily using an open source compiler, run cross-platform, and carry no external dependencies, while providing functional usability. This is the beginning of a set of tools which progressively expand on the operations available while following the same minimal and canonical focus. More tools with specific applications in mind will also be implemented as needed, to give different forms to access the same functionality, or test applied concepts.</p>-->
     
-    <p>In this approach, the <i>meaning</i> of properties themselves is left for interpretation; the tool is mostly concerned with semantics and knowledge mapping. Variations of property sets or the meaning of properties can be stipulated; each combination is a project. The tool might be useful in occasions where a sizeable number of concepts are in discourse, and, while the subject matter is open for interpretation, a semantic tool helps onboarding, finding edge cases, or qualifying concepts in a measured, controlled way; or keeping structure for documentation of complexity.</p>
-    
-    <p>The following technical display should give a more precise illustration.</p>
-    
-    <p>Given the following input file:</p>
+    <!--<p>In this approach, the <i>meaning</i> of properties themselves is left for interpretation; the tool is mostly concerned with semantics and knowledge mapping. Variations of property sets or the meaning of properties can be stipulated; each combination is a project. The tool might be useful in occasions where a sizeable number of concepts are in discourse, and, while the subject matter is open for interpretation, a semantic tool helps onboarding, finding edge cases, or qualifying concepts in a measured, controlled way; or keeping structure for documentation of complexity.</p>-->
+     
+    <p>Let's present a practical example. Given the following input file:</p>
     
     <pre>
     Collections, Multiset
@@ -149,7 +166,7 @@ MathJax = {
     Collections.Column           , Properties.Typing
     </pre>
     
-    <p>The following results could follow:</p>
+    <p>The following results would follow:</p>
     
     <pre>
     PropertyProvider v0.1
@@ -361,237 +378,7 @@ MathJax = {
     </details>
   </article>
   
-<!-- End article "Property Provider" -->
-<!-- Begin article "An Exponentiation-based Float Hash" -->
-
-<article>
-    <h1>An exponentiation-based list hash</h1>
-    
-    <!-- <div class="blogtags"><span class="blogtag algo">Algorithms</span><span class="blogtag algo">Mathematics</span></div> -->
-  
-    <div class="article_details"><p>03/2019</p><hr/></div>
-  
-    <details>
-  
-    <summary><blockquote class="special"><b>Abstract: </b>This article presents a mathematical algorithm to represent a list of real numbers as a single number using an exponentiation-based accumulation. We discuss the limitations of traditional statistical reductions like mean and standard deviation, and propose a non-commutative operation, exponentiation, to address these issues. The article also addresses challenges such as magnitude manipulations, leading zeros, and negative inputs, and proposes solutions to maintain the integrity of the original data. The algorithm's execution falls in the category of linear algorithms in time, making it efficient for medium to large lists, while being constant in space.</blockquote></summary>
-
-<p>In this post, I'll describe an algorithm to represent real number lists by a single number.</p>
-
-<p>First, we'll note mean and standard deviation from statistics are reductions commonly used to indicate properties about data expressed as lists of numbers.</p>
-
-<p>The mean statistic, as a property of such list of numbers, is opaque to a modification such that one value is increased in the list while another value is decreased by the same amount. When this modification is performed, the resulting value is not modified. For example, </p>
-
-$$\displaylines{
-mean [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
-mean [6.5, 3.98, 6.72, 0.89, 3.74, 2.87].
-}$$
-
-<p>Obviously, for the purpose at hand, this would be a serious downside. On this point, the standard deviation is an improvement. That statistic's value is different for the same change:</p>
-
-$$\displaylines{
-stddev [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = 2.5149, \\
-stddev [6.5, 3.98, 6.72, 0.89, 3.74, 2.87] = 2.21737.
-}$$
-
-<p>The standard deviation, however, is susceptible to a value swap between two numbers: exchanging the position of one value with the position of another one has no effect on the number list's dispersion or its mean value, either.</p>
-
-<p>As an example, considering </p>
-
-$$\displaylines{
-A=[7.5, 2.98, 6.72, 0.89, 3.74, 2.87],\\
-B=[2.98, 7.5, 6.72, 0.89, 3.74, 2.87]
-}$$
-
-<p>(elements 1-2 swapped),</p>
-
-$$\displaylines{
-stddev(A) = stddev(B), \\
-mean(A) = mean(B).
-}$$
-
-<p>The common characteristic of those two algorithms over the list of numbers is that they aggregate using mathematically commutative operations: the order of the numbers presented to the operation does not influence its result. We'll examine the possibility of applying a operation which is not commutative to the same problem.<br/>
-
-<h3>Ordering</h3>
-
-<p>One of the first mathematical operations to suggest itself is exponentiation.</p>
-
-$$\displaylines{
-2 ^ 3 \neq 3 ^ 2, \\
-\left(2 ^ 3\right) ^ 4 \neq 2 ^ \left(3 ^ 4\right).
-}$$
-
-<p>(Note that </p>
-
-$$\displaylines{
-2^4=4^2,
-}$$
-
-<p>but these are the only pair of natural numbers which commute under exponentiation [<a href="#references">1</a>].)</p>
-
-<p>Drawing this operation of consecutive exponentation with the symbol \(\bigwedge\), and each exponentiation with \(\wedge\), now, </p>
-
-$$\displaylines{
-\bigwedge [7.5, 2.98, 6.72, 0.89, 3.74, 2.87] = \\
-7.5 \wedge 2.98 \wedge 6.72 \wedge 0.89 \wedge 3.34 \wedge 2.87 = \\
-436.491
-}$$
-
-<p>and </p>
-
-$$\displaylines{
-\bigwedge [2.98, 7.5, 6.72, 0.89, 3.74, 2.87] = \\
-4348.3,
-}$$
-
-<p>such that the ordering requirement is now satisfied.</p>
-
-<h3>Sizing</h3>
-
-<p>As the ordering problem is solved, another immediate problem arises, that the exponentiated numbers grow too fast. We examine the case of \([5,6,4.6]\), which has a magnitude (measured in multiples of 10) of \(10 ^{2654}\).</p>
-
-<p>We'll reduce the magnitude of every number to \(1\), by extracting the decimal exponent and dividing the number by it.</p>
-
-<p>Now, </p>
-
-$$\displaylines{
-\bigwedge [5, 6, 4006] = \\
-\left(5 \times \frac{1}{10^1}\right) \wedge \left(6 \times \frac{1}{10^1}\right) \wedge \left(4006 \times \frac{1}{10^4}\right) = \\
-0.5 \wedge 0.6 \wedge 0.4006 = \\
-0.568431.
-}$$
-
-<p>Drawing "normalized" numbers as \(\overline{x}\), </p>
-
-$$\displaylines{
-\overline{5} \wedge \overline{6} \wedge \overline{4006} = 0.568431.
-}$$
-
-<p>The result, now, sits within a controlled range between \(0\) and \(1\).</p>
-
-<h3>Corner cases</h3>
-
-<p>Some corner cases present themselves. The normalization opens up the possibility of magnitude manipulations (since the magnitude is taken out of every number). Thus changes like:</p>
-
-$$\displaylines{\bigwedge [50,.6,46,0.63,.0005,4300,52] = 0.596399\text{,}}$$
-
-$$\displaylines{\bigwedge [50,6,4.6,6.3,5,4.3,5.2] = 0.596399}$$
-
-<p>yield equal results.</p>
-
-<p>However, those same changes also change the mean value in the list:</p>
-
-$$\displaylines{
-mean [5,6,4.6,6.3,5,4.3,5.2] = 5.2, \\
-mean [50,6,4.6,6.3,5,4.3,5.2] = 11.6286, 
-}$$
-
-<p>We'll prepend the mean to the list; the mean will end up used as the first exponent.</p>
-
-$$\displaylines{
-\bigwedge [5,6,4.6,6.3,5,4.3,5.2] = \\
-\overline{5} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2} \wedge mean)))))) = \\
-\overline{5} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2} \wedge \overline{5.2})))))) = \\
-0.595317 \\ \neq \\
-\bigwedge [50,6,4.6,6.3,5,4.3,5.2] = \\
-\overline{11.6286} \wedge (\overline{50} \wedge (\overline{6} \wedge (\overline{4.6} \wedge (\overline{6.3} \wedge (\overline{5} \wedge (\overline{4.3} \wedge (\overline{5.2}))))))) = \\
-0.595047.
-}$$
-
-<p>Now, because the mean is normalized like any other value in the list, a global multiplication of the list by factors of 10 will produce the same results. This case, though, is not fixed, because the manipulation required (multiplying every number by orders of 10) is considered too harmful to the integrity of the original data.</p>
-
-<p>Exponentiation as the chosen operation presents relevant properties.</p>
-
-<p>First, any base of zero in the list will "throw back" the accumulated result to zero; this is not considered a serious issue, but another more serious one is that, in the case the list possesses a leading zero, the final result will be invariably zero, because the zero will be the last exponent to be calculated.</p>
-
-<p>Both problems can be eliminated by substituting zeroes for the normalized mean value, with no detectable side effects. This guarantees, also, no stabilization of value between zeroes (that the resulting value will keep constant as long as there are zeroes in the input).</p>
-
-<p>A special case of this condition is that one of an all-zero list: it yields the \(0^0\) exponentiation, halting the algorithm. This is not possible to avoid without identifying such list element-by-element. In this implementation, this is done beforehand, and zero is returned.</p>
-
-<p>Another possible halting condition is pertaining to negative inputs. Of course, exponentiation by a negative number results in a fraction which, used as exponent for the next number in the list, which could be negative, could yield calculation of an even root over a negative number, producing a complex number.</p>
-
-<p>The trivial solution is taken, of taking absolutes of the inputs, as changes of signal will change the mean as well. The mean is used here again as a help.</p>
-
-<p>Another possible manipulation scenario is that of a swap of two values between themselves  which are multiples of ten between themselves. This combines the swapping and magnitude reduction manipulations. This is the second problem we choose to not fix, by hypothesising a low desireability.</p>
-
-<p>Finally, the operation of consecutive exponentiation is susceptible, at least theoretically, to floating point collisions, because of rounding. The probability of such a collision happening is assumed to be low enough for common use cases.</p>
-
-<h3>Summary</h3>
-
-<p>This number should uniquely represent a list of numbers, except for the following manipulations:</p>
-
-<ul>
-  <li>Changes of all numbers by factors of 10;</li>
-  <li>Swaps of numbers which are multiples of 10 between themselves.</li>
-</ul>
-
-<h3>Visualization</h3>
-
-<p>In figures 1-2, the sucessive calculated value can be seen in random number list. The result obtained is the last point of the lines.</p>
-<p>In figures 3-4, we see the evolution of final results generated over sequences of lists of mostly equidistant and equidistant numbers, respectively, coming from real and synthetic data (incremental entity ids). These are used to try to show possibilities of collisions in the \(y\)-axis, although there are not necessarily collisions in sections of the lines sharing the same \(y\) intervals.<br/>
-
-<div style="overflow: auto; margin-left: auto; margin-right: auto; width: 39em; margin-bottom: 40px; margin-top: 40px; border: 0px solid black">
-  <div style="float: left; margin-right: 2em; border: 0px solid black">
-    <img src="img/an_index_for_number_list_identification/a10.png"/>
-    <div class="figlabel">Fig. 1: successive calculation over a <br/>random 10-sized list</div>
-  </div>
-  <div style="float: left; margin-left: 2em; border: 0px solid black">
-    <img src="img/an_index_for_number_list_identification/a100.png"/>
-    <div class="figlabel">Fig. 2: successive calculation over a <br/>random 100-sized list</div>
-  </div>
-</div>
-<div style="overflow: auto; margin-left: auto; margin-right: auto; width: 39em; border: 0px solid black">
-  <div style="float: left; margin-right: 2em; border: 0px solid black">
-    <img src="img/an_index_for_number_list_identification/b1.png"/>
-    <div class="figlabel">Fig. 3: final results for 1000 lists <br/>of mostly equidistant numbers</div>
-  </div>
-  <div style="float: left; margin-left: 2em; border: 0px solid black">
-    <img src="img/an_index_for_number_list_identification/b2.png"/>
-    <div class="figlabel">Fig. 4: final results for 1000 <br/>lists of equidistant numbers</div>
-  </div>
-</div>
-
-<h3>Benchmarking</h3>
-
-<p>The algorithm execution involves one pass over the entire list, for the result calculation, and two more for the mean and standard deviation calculation. It falls within the category of a linear algorithm.</p>
-
-<p>Platform: Ryzen 5 5600G, 16,00 GB, Windows 10.</p>
-
-<table class="infotbl">
-    <tr>
-      <th>Random list size</th>
-      <td>100.000</td>
-      <td>1.000.000</td>
-      <td>10.000.000</td>
-      <td>100.000.000</td>
-      <td>1.000.000.000</td>
-    </tr>
-    <tr>
-      <th>Time</th>
-      <td>0.009 s</td>
-      <td>0.092 s</td>
-      <td>0.921 s</td>
-      <td>9.235 s</td>
-      <td>93.572 s</td>
-    </tr>
-</table>
-
-<h3>Implementations</h3>
-
-<ul>
-  <li><a href="https://github.com/pedroos/NoperHash" target="_blank">C# (GitHub)</a></li>
-</ul>
-
-<a name="references"><h3>References</h3></a>
-
-<ol>
-  <li><a href="https://math.stackexchange.com/a/3290588/479728" target="_blank">Structure of integer pairs which commute under exponentiation</a></li>
-</ol>
-  
-</details>
-</article>
-
-<!-- End article "An Exponentiation-based Float Hash" -->
-<!-- Begin article "Layered Intervals Algorithm" -->
+<!-- End article "Property Provider" --><!-- Begin article "Layered Intervals Algorithm" -->
 
 <article>
     <h1>Computing layered intervals</h1>
@@ -602,9 +389,9 @@ $$\displaylines{
   
     <details>
   
-    <summary><blockquote class="special"><b>Abstract: </b>This article introduces a linear algorithm for calculating a final set of intervals with a layered set of intervals as input, addressing the challenge of accounting for obstructions in higher level layers. A pseudocode implementation and an accompanying C# implementation with tests are included.</blockquote></summary>
+    <summary><blockquote class="special"><b>Abstract: </b>This article explains an algorithm for calculating a set of intervals from a set of layered of intervals while accounting for obstructions.<!-- A pseudocode implementation and an accompanying implementation with tests are included.--></blockquote></summary>
 
-<p>This page describes an algorithm created to calculate a final set of intervals with a set of layered intervals as input linearly (i.e., from left to right).</p>
+<p>This page describes an algorithm for calculation of a final set of intervals from a set of layered intervals, accounting for obstructions, linearly (i.e., from left to right).</p>
 
 <!-- all 640 plus margins (2x unit) wide, 640/20 = 32 unit width -->
 
@@ -1007,8 +794,7 @@ $$\displaylines{
 </details>
 </article>
 
-<!-- End article "Layered Intervals Algorithm" -->
-<!-- Begin article "Lattice Big Integer Multiplication" -->
+<!-- End article "Layered Intervals Algorithm" --><!-- Begin article "Lattice Big Integer Multiplication" -->
 
 <article>
     <h1>Lattice big-integer multiplication</h1>
@@ -1019,7 +805,7 @@ $$\displaylines{
   
     <details>
   
-    <summary><blockquote class="special"><b>Abstract: </b>This article presents an implementation of the lattice multiplication method, an ancient technique for multiplying large numbers, in C#. The basic idea is that numbers can be multiplied digit-by-digit and, as each digit only ranges from 0 to 9, the maximum multiplication performed per step is 9 x 9. The implementation, capable of computing 4999! (with 16322 digits) in around one minute, uses a cell-walking routine to traverse arbitrary shape lattices in three distinct phases. The article also includes pseudocode implementations and references.</blockquote></summary>
+    <summary><blockquote class="special"><b>Abstract: </b>This article presents an implementation of the lattice multiplication method, an ancient technique for multiplying large numbers. <!--The basic idea is that numbers can be multiplied digit-by-digit and, as each digit only ranges from 0 to 9, the maximum multiplication performed per step is 9 x 9.--> The implementation, capable of computing 4999! (with 16322 digits) in the order of a minute, uses a cell-walking routine to traverse arbitrary shape lattices in three distinct phases.<!-- The article also includes pseudocode implementations and references.--></blockquote></summary>
 
 <p>As we know, not very large numbers (such as 99) have very large factorials, with this one having 156 decimal places.</p>
 
@@ -1450,7 +1236,8 @@ $$\displaylines{
 </div>
 
 <footer>
-&copy 2018-2024 Pedro Sobota. All rights reserved.
+  <hr class="hr1"/>
+&copy 2018-2025 Pedro Sobota. All rights reserved.
 </footer>
 
 </body>
